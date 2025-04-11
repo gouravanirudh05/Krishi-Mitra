@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import Farmer from "../models/farmerModel.js";
-import getLocationHierarchy from "../gemini.js";
 import NPK from "../models/NPKModel.js";
 import FarmerCrop from "../models/farmerCropsModel.js";
 import axios from "axios";
+import mongoose from "mongoose";
+import {getLocationHierarchy,getCropGrowthStage} from "../models/gemini.js";
+import Kc from "../models/KcModel.js";
 
 const router = Router();
 
@@ -91,23 +93,38 @@ router.post("/getRecommendations", async (req, res) => {
 });
 
 router.post("/getIrrigation", async (req, res) => {
-  try{
-    const {phoneNumber} = req.body;
+  try {
+    const { phoneNumber } = req.body;
     console.log(phoneNumber);
-    const farmer = await Farmer.findOne({phoneNumber});
-    if(!farmer){
+
+    const farmer = await Farmer.findOne({ phoneNumber });
+    if (!farmer) {
       console.log("Farmer not found");
-      res.status(404).json({recommendations: null});
+      res.status(404).json({ recommendations: null });
       return;
     }
-    const {_id,town, district,state} = farmer;
-    console.log(_id,town,district,state);
-    const farmerCrop = await FarmerCrop.find({farmerId: _id});  
-    console.log(farmerCrop);
-    res.json({farmerCrop});
-  }
-  catch(err){
-    res.status(500).json({error: err});
+
+    const { _id, town, landArea} = farmer;
+    console.log(_id, town);
+    //const {rain,Eto} = await getWeatherByLocation2(town);
+    const rain = 20; const Eto = 2;
+
+    const farmerCrop = await FarmerCrop.find({ farmerId: _id });
+    const irrigationResults = [];
+    //for fc in farmerCrop
+    for(const fc of farmerCrop)
+    {
+      const crop = fc.cropName;
+      const sownDate = fc.date.toISOString().split('T')[0];
+      console.log(crop, sownDate);
+      
+      const irrigationQty = await getIrrigation(town,crop,sownDate,landArea,rain,Eto);
+      irrigationResults.push({crop,irrigationQty});
+    }
+    res.json({irrigationResults});
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -210,7 +227,7 @@ async function getWeatherByLocation1(location) {
 }
 
 async function getWeatherByLocation2(location) {
-  console.log(weatherAPIKey);
+  // console.log(weatherAPIKey);
   //const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric`;
   // const locResponse= await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=${weatherAPIKey}`);
   // const locData = await locResponse.json();
@@ -244,6 +261,29 @@ async function getWeatherByLocation2(location) {
   } catch (err) {
     throw err;
   }
+}
+
+async function getIrrigation(crop,sownDate,area,rain,Eto)
+{
+  //const area=100;
+  const stageInfo = await getCropGrowthStage(crop, sownDate, new Date().toISOString().split('T')[0]);
+  console.log(stageInfo);
+  const regex = new RegExp(crop, "i"); // case-insensitive
+  const result = await Kc.findOne({ Crop: { $regex: regex } });
+  console.log("look here: "+result);
+  let kc;
+  if(stageInfo.stage=="initial")
+    kc=result["Kc ini"];
+  else if(stageInfo.stage=="mid")
+    kc=result["Kc mid"];
+  else if(stageInfo.stage=="late")
+    kc=result["Kc end"];
+
+  //const ETo = calculateET_Hargreaves(tempMax, tempMin, tempMean, latitude, dayOfYear);
+  const irrigation=(Eto*kc)-rain;
+  if(irrigation<0)
+    irrigation=0;
+  return irrigation*area;
 }
 
 export default router;
