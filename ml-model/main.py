@@ -79,6 +79,20 @@ def predict_crop_and_fertilizer(input_data: CropInput):
 def recommend_fertilizer(data: CropFertilizerRequest):
     try:
         fertilizer = crop_predictor.get_fertilizer_for_crop(data.crop_name)
+        encoded_soil = crop_predictor.encoders["Soil Type"].transform([data.Soil_Type])[0]
+        input_array = [[
+            data.Temparature,
+            data.Humidity,
+            data.Moisture,
+            encoded_soil,
+            data.Nitrogen,
+            data.Potassium,
+            data.Phosphorous
+        ]]
+        days = crop_predictor.predict_fertilising_days(input_array)
+        return {
+            "recommended_fertilizer": fertilizer,
+            "fertilise_once_in_days": days
+        }
     except Exception as e:
         return {"error": str(e)}
-    return {"recommended_fertilizer": fertilizer}
