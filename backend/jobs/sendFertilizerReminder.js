@@ -1,5 +1,7 @@
 import Farmer from '../models/farmerModel.js';
+import FarmerCrop from '../models/farmerCropsModel.js';
 import Crop from '../models/cropModel.js';
+import Kc from "../models/KcModel.js"
 import twilio from 'twilio';
 
 const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
@@ -9,17 +11,16 @@ export default (agenda) => {
     try{
     console.log("Entered1");
     console.log("Job data:", job.attrs.data);
-    const { farmerId, cropName } = job.attrs.data;
+    const { farmerId, cropName, fertilizer } = job.attrs.data;
 
     const farmer = await Farmer.findById(farmerId);
-    const cropInfo = await Crop.findOne({ name: cropName });
+
     console.log("Entered2");
 
-    if (!farmer || !cropInfo) return;
     console.log("Entered3");
 
     await client.messages.create({
-      body: `Reminder: Apply ${cropInfo.fertilizer} for your ${cropName} crop today! 🌾`,
+      body: `Reminder: Apply ${fertilizer} for your ${cropName} crop today! 🌾`,
       from: process.env.TWILIO_PHONE,
       to: farmer.phoneNumber
     });

@@ -193,7 +193,7 @@ router.get("/farmer/getCrops", farmerAuthMiddleware, async (req, res) => {
         //     cost: fc.cost
         // }));
 
-        res.json({ success: true, farmerCrops });
+        res.json({ success: true, farmerCrops});
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: "Server error" });
@@ -217,6 +217,16 @@ router.get("/customer/getCrops", async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: "Server error" });
+    }
+});
+
+router.get("/farmer/getProfile", farmerAuthMiddleware, async (req, res) => {
+    try {
+        const farmer = Farmer.findById(req.farmer.id);
+        res.json({farmer, sucess: true});
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ success: false, message: error.message });
     }
 });
 
@@ -274,5 +284,6 @@ router.post("/farmerCall/addCrop", async (req, res) => {
   
     // res.json({ success: true });
   });
+
 
 export default router;

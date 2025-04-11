@@ -7,7 +7,8 @@ const Farmer = mongoose.model('Farmer', new mongoose.Schema({
     state: String,
     town: String,
     block: String,
-    landArea: Number
+    landArea: Number,
+    farmingTips: String,
 }));
 
 export default Farmer;

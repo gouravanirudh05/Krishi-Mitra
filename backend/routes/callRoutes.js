@@ -7,8 +7,14 @@ import axios from "axios";
 import mongoose from "mongoose";
 import {getLocationHierarchy,getCropGrowthStage,getFarmingTips} from "../models/gemini.js";
 import Kc from "../models/KcModel.js";
+import agenda from '../agenda.js';
+import defineFertilizerReminderJob from '../jobs/sendFertilizerReminder.js';
 
 const router = Router();
+
+defineFertilizerReminderJob(agenda);
+
+await agenda.start(); 
 
 router.post("/checkFarmer", async (req, res) => {
     try{
@@ -236,21 +242,20 @@ router.post("/farmer/addCrop", async (req, res) => {
     if(!farmer)
       return res.status(404).json({success: false, message: "Farmer does not exists."});
   
-    const kc = await Kc.findOne({name: cropName});
+    const kc = await Kc.findOne({Crop: cropName});
   
     if(!kc)
       return res.status(404).json({success: false, message: "Crop does not exists."});
   
-    const farmerCrop = new FarmerCrop({farmerId: farmer._id, cropId: kc._id, cropName: kc.Crop, date: new Date()});
-  
-    await farmerCrop.save();
 
     const {nitrogenVal, potassiumVal, phosphorousVal} = await getNPKValues(farmer.town, farmer.district, farmer.state);
-    const {temperature, humidity} = await getWeatherByLocation1(farmer.town);
+    console.log(farmer.town);
+    // const {temperature, humidity} = await getWeatherByLocation1(farmer.town);
+    // console.log(temperature, humidity);
 
     const requestBody = {
-            Temparature: temperature,
-            Humidity: humidity,
+            Temparature: 37,
+            Humidity: 50,
             Moisture: 40.0,
             Soil_Type: "Clayey",
             Nitrogen: nitrogenVal,
@@ -260,10 +265,23 @@ router.post("/farmer/addCrop", async (req, res) => {
           };
       
           try {
-            const response = await axios.post("https://5b56-14-195-89-114.ngrok-free.app/recommend-fertilizer", requestBody);
-            const fertilizer = response.data;
-            console.log(fertilizer);
-            res.json({fertilizer});
+            const response = await axios.post("https://0946-14-195-89-114.ngrok-free.app/recommend-fertilizer", requestBody);
+            const json = response.data;
+            const farmerCrop = new FarmerCrop({farmerId: farmer._id, cropId: kc._id, cropName: kc.Crop, date: new Date(), fertilizer: json.recommended_fertilizer, fertilizerPeriod: json.fertilise_once_in_days});
+            await farmerCrop.save();
+            const interval = `${farmerCrop.fertilizerPeriod} days`;
+        
+            // Create a unique job name per farmer+crop combo to avoid duplicates
+            const uniqueJobName = `reminder-${farmer._id}-${cropName}`;
+        
+            await agenda.every(interval, 'send fertilizer reminder', {
+            farmerId: farmer._id.toString(),
+            cropName: cropName,
+            fertilizer: json.recommended_fertilizer
+            }, { jobId: uniqueJobName });
+        
+            res.json({ success: true });
+            console.log(json);
           } catch (error) {
             console.error("Fertilizer recommendation failed:", error.response?.data || error.message);
             res.status(500).json({ success: false, message: "Fertilizer recommendation failed", error: error.message });
@@ -314,6 +332,8 @@ router.post("/farmer/addCrop", async (req, res) => {
       {
         tips+=tip+"\n";
       }
+      farmer.farmingTips = tips;
+      await farmer.save();
       res.json({tips: tips});
   
     } catch (err) {
