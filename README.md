@@ -1,4 +1,24 @@
-# 🚀 KrishiMitra
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/FantomCode25/GG_Coders">
+    <img src="frontend/src/assets/logo.png" alt="Logo" width="80" height="80">
+  </a>
+
+  <h3 align="center">Best-README-Template</h3>
+
+  <p align="center">
+    An awesome README template to jumpstart your projects!
+    <br />
+    <a href="https://github.com/FantomCode25/GG_Coders"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/FantomCode25/GG_Coders">View Demo</a>
+    &middot;
+  </p>
+</div>
+
+# KrishiMitra
 
 **Team Name:** _GG_Coders_  
 **Hackathon:** _FantomCode2025 4th edition_  
@@ -38,17 +58,15 @@ _Explain your proposed solution. How does your project address the problem? High
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** _e.g., React, Vue, Flutter_  
-- **Backend:** _e.g., Node.js, Django, Firebase_  
-- **Database:** _e.g., MongoDB, PostgreSQL_  
-- **APIs / Libraries:** _e.g., OpenAI, Google Maps API, TensorFlow_  
+- **Frontend:** _e.g., React, Vue, Flutter_
+- **Backend:** _e.g., Node.js, Django, Firebase_
+- **Database:** _e.g., MongoDB, PostgreSQL_
+- **APIs / Libraries:** _e.g., OpenAI, Google Maps API, TensorFlow_
 - **Tools:** _e.g., Docker, GitHub Actions, Figma_
 
 ---
 
 ## 🧩 Architecture / Diagram (if any)
-
-
 
 ---
 
@@ -77,3 +95,4 @@ npm start
 _Include system architecture, data flow diagrams, or UI wireframes if available._
 
 > 📌 **Tip:** You can add an image like this:
+```
