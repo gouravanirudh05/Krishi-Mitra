@@ -2,7 +2,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/FantomCode25/GG_Coders">
-    <img src="frontend/src/assets/logo.png" alt="Logo" width="100" height="100">
+    <img src="frontend/src/assets/white-logo.png" alt="Logo" width="100" height="100">
   </a>
 
   <h3 align="center">KrishiMitra</h3>
@@ -10,16 +10,15 @@
   <p align="center">
     Just a great tool to empower farmers
     <br />
+    <br />
     <strong>GG_Coders</strong>
     <br />
     <strong>FantomCode2025 4th edition</strong>
     <br />
     <strong>11/04/2025</strong>
-    &middot;
   </p>
 </div>
 
----
 
 ## 📖 Table of Contents
 
@@ -31,25 +30,17 @@
 6. [Installation & Usage](#-installation--usage)
 7. [Team Members](#-team-members)
 
----
-
 ## 🧠 Introduction
 
 _A brief overview of your project. What does it do? Who is it for? Why is it impactful?_
-
----
 
 ## ❗ Problem Statement
 
 _Describe the real-world problem you're solving. What are the pain points and why does this matter?_
 
----
-
 ## ✅ Solution Overview
 
 _Explain your proposed solution. How does your project address the problem? Highlight key features. Attach screenshots if required._
-
----
 
 ## 🛠️ Tech Stack
 
@@ -59,11 +50,7 @@ _Explain your proposed solution. How does your project address the problem? High
 - **APIs / Libraries:** _e.g., OpenAI, Google Maps API, TensorFlow_
 - **Tools:** _e.g., Docker, GitHub Actions, Figma_
 
----
-
 ## 🧩 Architecture / Diagram (if any)
-
----
 
 ## 🧪 Installation & Usage
 
