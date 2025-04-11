@@ -1,3 +1,9 @@
+<a id="readme-top"></a>
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -267,3 +273,13 @@ One can learn more about this from the `/docs` page.
 [pandas-url]: https://pandas.pydata.org/
 [fastapi]: https://img.shields.io/badge/fastapi-109989?style=for-the-badge&logo=FASTAPI&logoColor=white
 [fastapi-url]: https://fastapi.tiangolo.com/
+[contributors-shield]: https://img.shields.io/github/contributors/FantomCode2025/GG_Coders?style=for-the-badge
+[contributors-url]: https://github.com/FantomCode2025/GG_Coders/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/FantomCode2025/GG_Coders.svg?style=for-the-badge
+[forks-url]: https://github.com/FantomCode2025/GG_Coders/network/members
+[stars-shield]: https://img.shields.io/github/stars/FantomCode2025/GG_Coders.svg?style=for-the-badge
+[stars-url]: https://github.com/FantomCode2025/GG_Coders/stargazers
+[issues-shield]: https://img.shields.io/github/issues/FantomCode2025/GG_Coders.svg?style=for-the-badge
+[issues-url]: https://github.com/FantomCode2025/GG_Coders/issues
+[license-shield]: https://img.shields.io/github/license/FantomCode2025/GG_Coders.svg?style=for-the-badge
+[license-url]: https://github.com//FantomCode2025/blob/master/LICENSE.txt
