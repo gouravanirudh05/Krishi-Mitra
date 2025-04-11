@@ -143,6 +143,7 @@ router.post("/getRecommendations", async (req, res) => {
     };
 
     const response = await axios.post(`${process.env.CROP_FERTILIZER_URL}/predict-crop-fertilizer`, requestBody);
+    console.log(response.data);
     const cropRecommendations = response.data.recommendations;
 
     const cropPredictedPrices = [];
@@ -155,7 +156,7 @@ router.post("/getRecommendations", async (req, res) => {
       };
 
       const response2 = await axios.post(`${process.env.CROP_PRICE_URL}/predict-price`, requestBody2);
-      //console.log("are "+response2.data.predicted_price);
+      console.log("are "+response2.data);
 
       cropPredictedPrices.push({
         crop: cropObj.crop,
@@ -250,12 +251,12 @@ router.post("/farmer/addCrop", async (req, res) => {
 
     const {nitrogenVal, potassiumVal, phosphorousVal} = await getNPKValues(farmer.town, farmer.district, farmer.state);
     console.log(farmer.town);
-    // const {temperature, humidity} = await getWeatherByLocation1(farmer.town);
-    // console.log(temperature, humidity);
+    const {temperature, humidity} = await getWeatherByLocation1(farmer.town);
+    console.log(temperature, humidity);
 
     const requestBody = {
-            Temparature: 37,
-            Humidity: 50,
+            Temparature: temperature,
+            Humidity: humidity,
             Moisture: 40.0,
             Soil_Type: "Clayey",
             Nitrogen: nitrogenVal,
@@ -265,7 +266,7 @@ router.post("/farmer/addCrop", async (req, res) => {
           };
       
           try {
-            const response = await axios.post("https://0946-14-195-89-114.ngrok-free.app/recommend-fertilizer", requestBody);
+            const response = await axios.post("https://2091-14-195-89-114.ngrok-free.app/recommend-fertilizer", requestBody);
             const json = response.data;
             const farmerCrop = new FarmerCrop({farmerId: farmer._id, cropId: kc._id, cropName: kc.Crop, date: new Date(), fertilizer: json.recommended_fertilizer, fertilizerPeriod: json.fertilise_once_in_days});
             await farmerCrop.save();

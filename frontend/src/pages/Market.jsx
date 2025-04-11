@@ -1,36 +1,60 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import CropCard from "../components/CropCard";
 import ChartCard from "../components/ChartCard";
-
+const BACKEND_URL =
+  import.meta.env.VITE_APP_BACKEND_URL ?? "http://localhost:5000";
 export default function MarketDashboard() {
+    const [farmerCrops, setFarmerCrops] = useState([]);
+
+    useEffect(() => {
+        async function fetchFarmerCrops() {
+            try {
+                const farmerId = localStorage.getItem("farmerId"); // or extract from JWT if using auth
+                const res = await fetch(`${BACKEND_URL}/api/marketPlace/farmer/getMarket`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    setFarmerCrops(data.farmerCrops);
+                }
+            } catch (err) {
+                console.error("Failed to fetch crops", err);
+            }
+        }
+
+        fetchFarmerCrops();
+    }, []);
+
     return (
         <div className="min-h-screen bg-gray-50 flex">
-            {/* Sidebar */}
             <Sidebar />
 
             <div className="flex flex-col flex-1">
-                {/* Header */}
                 <Header title="Market Overview" />
 
-                {/* Main content */}
                 <main className="flex-1 p-8 space-y-8">
                     {/* Your Crops Section */}
                     <div className="mb-6">
+                        <h2 className="text-xl font-bold mb-4">Your Market Crops</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                            {[1, 2, 3].map((i) => (
+                            {farmerCrops.map((crop) => (
                                 <CropCard
-                                    key={i}
-                                    id={i}
-                                    name={`Crop Name ${i}`}
+                                    key={crop._id}
+                                    id={crop._id}
+                                    name={crop.cropName}
                                     emoji="🌾"
-                                    color="#fee2e2"
-                                    sales={`${i * 500} kg`}
-                                    growth="+8% from yesterday"
+                                    color="#d1fae5"
+                                    sales={`${crop.cropQuantity} kg`}
+                                    growth={`₹${crop.cropPrice} per kg`}
                                 />
                             ))}
-                            <div className="flex items-center justify-center bg-gray-200 rounded-xl shadow text-4xl font-light">
+                            <div className="flex items-center justify-center bg-gray-200 rounded-xl shadow text-4xl font-light cursor-pointer">
                                 +
                             </div>
                         </div>
@@ -38,69 +62,14 @@ export default function MarketDashboard() {
 
                     {/* Graph Sections */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <ChartCard
-                            title="Market Trends"
-                            footer={
-                                <>
-                                    <span className="text-purple-500">Loyal</span>
-                                    <span className="text-red-500">New</span>
-                                    <span className="text-green-500">Unique</span>
-                                </>
-                            }
-                        >
-                            [Market Trends Chart Placeholder]
-                        </ChartCard>
-
-                        <ChartCard
-                            title="Profit Ratio / with your price"
-                            footer={
-                                <>
-                                    <span className="text-blue-600">● Online Sales</span>
-                                    <span className="text-green-600">● Offline Sales</span>
-                                </>
-                            }
-                        >
-                            [Profit Bar Chart Placeholder]
-                        </ChartCard>
-
-                        <ChartCard
-                            title="Time to Harvest"
-                            footer={
-                                <>
-                                    <div>
-                                        <div className="text-blue-600">● Last Month</div>
-                                        <div className="text-gray-500">$3,004</div>
-                                    </div>
-                                    <div>
-                                        <div className="text-green-600">● This Month</div>
-                                        <div className="text-gray-500">$4,504</div>
-                                    </div>
-                                </>
-                            }
-                        >
-                            [Time to Harvest Chart Placeholder]
-                        </ChartCard>
+                        <ChartCard title="Market Trends">[Market Trends Chart Placeholder]</ChartCard>
+                        <ChartCard title="Profit Ratio / with your price">[Profit Bar Chart Placeholder]</ChartCard>
+                        <ChartCard title="Time to Harvest">[Time to Harvest Chart Placeholder]</ChartCard>
                     </div>
 
                     {/* Expected Harvest Profit */}
                     <div className="mt-4">
-                        <ChartCard
-                            title="Expected Harvest Profit"
-                            footer={
-                                <>
-                                    <div>
-                                        <div className="text-green-600">Reality Sales (Global)</div>
-                                        <div className="text-right">8,823</div>
-                                    </div>
-                                    <div>
-                                        <div className="text-yellow-600">Target Sales (Commercial)</div>
-                                        <div className="text-right">12,122</div>
-                                    </div>
-                                </>
-                            }
-                        >
-                            [Expected Harvest Profit Chart Placeholder]
-                        </ChartCard>
+                        <ChartCard title="Expected Harvest Profit">[Expected Harvest Profit Chart Placeholder]</ChartCard>
                     </div>
                 </main>
             </div>

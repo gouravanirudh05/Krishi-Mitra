@@ -96,20 +96,25 @@ export default function Dashboard() {
 
           <p className="text-xl font-semibold text-gray-800 mb-2">Your Crops</p>
           <section className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
-            {crops
-              .filter((crop) => crop.cropName && crop.cropName.trim() !== "")
-              .map((crop) => (
-                <CropCard
-                  key={crop._id}
-                  id={crop._id}
-                  emoji="🌾"
-                  name={crop.cropName}
-                  color="#ffffff"
-                  fertilizer={crop.fertilizer}
-                  growth="+8% from yesterday"
-                />
-              ))}
+            {Array.from(
+              new Map(
+                crops
+                  .filter((crop) => crop.cropName && crop.cropName.trim() !== "")
+                  .map((crop) => [crop.cropName, crop])
+              ).values()
+            ).map((crop) => (
+              <CropCard
+                key={crop._id}
+                id={crop.cropName}
+                emoji="🌾"
+                name={crop.cropName}
+                color="#ffffff"
+                text1={`${crop.fertilizer} fertilizer used`}
+                text2={`crop sown on ${crop.date.toDateString()}`}
+              />
+            ))}
           </section>
+
 
           {/* Farming Tips */}
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">

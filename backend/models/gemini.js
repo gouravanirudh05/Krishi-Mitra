@@ -23,7 +23,7 @@ async function getLocationHierarchy(town, state) {
   `;
   
     const response = await ai.models.generateContent({
-      model: "gemini-1.5-pro", // or "gemini-2.0-flash" if you prefer speed over depth
+      model: "gemini-2.0-flash", // or "gemini-2.0-flash" if you prefer speed over depth
       contents: [{ role: "user", parts: [{ text: prompt }] }],
     });
   
@@ -59,7 +59,7 @@ async function getLocationHierarchy(town, state) {
     `;
   
     const response = await ai.models.generateContent({
-      model: "gemini-1.5-pro", // Use "gemini-2.0-flash" for faster but lighter response
+      model: "gemini-2.0-flash", // Use "gemini-2.0-flash" for faster but lighter response
       contents: [{ role: "user", parts: [{ text: prompt }] }],
     });
   
@@ -102,7 +102,7 @@ async function getLocationHierarchy(town, state) {
     `;
   
     const response = await ai.models.generateContent({
-      model: "gemini-1.5-pro",
+      model: "gemini-2.0-flash",
       contents: [{ role: "user", parts: [{ text: prompt }] }],
     });
   
