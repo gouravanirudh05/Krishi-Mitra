@@ -79,6 +79,8 @@ This solution brings accessibility, empowerment, and profitability directly into
 
 ## 🧩 Architecture / Diagram (if any)
 
+![Architecture Design Shot](readme-assets/technical-approach.png)
+
 ## 🧪 Installation & Usage
 
 ### Prerequisites
