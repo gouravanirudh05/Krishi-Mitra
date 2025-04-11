@@ -73,4 +73,47 @@ async function getLocationHierarchy(town, state) {
     }
   }
 
-export {getLocationHierarchy,getCropGrowthStage};
+  async function getFarmingTips({ district, area, crops, fertilizers }) {
+    const cropsList = crops.join(', ');
+    const fertList = fertilizers.join(', ');
+    
+    const prompt = `
+  You are an expert agricultural advisor for Indian farmers.
+  
+  Based on the following inputs, provide clear, practical, and location-aware farming tips in bullet points. Use farmer-friendly language. Keep it under 150 words.
+  
+  Inputs:
+  - District: ${district}
+  - Land Area: ${area} acres
+  - Crops Sown: ${cropsList}
+  - Fertilizers Used: ${fertList}
+  
+  Format:
+  {
+    "summary": "<Short personalized advice summary>",
+    "tips": [
+      "<Tip 1>",
+      "<Tip 2>",
+      ...
+    ]
+  }
+  
+  Only return the JSON object.
+    `;
+  
+    const response = await ai.models.generateContent({
+      model: "gemini-1.5-pro",
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+    });
+  
+    try {
+      const jsonText = response.text.trim().match(/\{[\s\S]*\}/)[0];
+      return JSON.parse(jsonText);
+    } catch (e) {
+      console.error("Failed to parse farming tips:", response.text);
+      return null;
+    }
+  }
+   
+
+export {getLocationHierarchy,getCropGrowthStage,getFarmingTips};
