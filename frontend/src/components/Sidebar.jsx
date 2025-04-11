@@ -1,13 +1,15 @@
 import { NavLink } from "react-router-dom";
 
-const navItems = [
-    { label: "Dashboard", path: "/dashboard" },
-    { label: "Planner", path: "/planner" },
-    { label: "Crops", path: "/crops" },
-    { label: "Market", path: "/market" },
-];
+export default function Sidebar({ activePage, customNav }) {
+    const defaultNav = [
+        { label: "Dashboard", path: "/dashboard" },
+        { label: "Planner", path: "/planner" },
+        { label: "Crops", path: "/crops" },
+        { label: "Market", path: "/market" },
+    ];
 
-export default function Sidebar() {
+    const navItems = customNav || defaultNav;
+
     return (
         <aside className="w-64 bg-white shadow-md p-6">
             <div className="flex items-center gap-2 mb-10">
@@ -20,7 +22,9 @@ export default function Sidebar() {
                         to={item.path}
                         key={item.path}
                         className={({ isActive }) =>
-                            `rounded-lg py-2 px-4 text-center w-full ${isActive ? "bg-green-600 text-white" : "hover:bg-gray-100"
+                            `rounded-lg py-2 px-4 text-left w-full ${isActive || activePage === item.label
+                                ? "bg-green-500 text-white"
+                                : "hover:bg-gray-100"
                             }`
                         }
                     >
