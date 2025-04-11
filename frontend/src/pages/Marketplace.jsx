@@ -4,52 +4,78 @@ import HeaderCustomer from "../components/HeaderCustomer";
 import CropCardCustomer from "../components/CropCardCustomer";
 import CheckoutButton from "../components/CheckoutButton";
 import CropModal from "../components/CropModal";
-import dummyCrops from "../data/dummyCrops";
 
 const BACKEND_URL =
   import.meta.env.VITE_APP_BACKEND_URL ?? "http://localhost:5000";
 
-export default function CustomerDashboard() {
+export default function Marketplace() {
   const [selectedCrop, setSelectedCrop] = useState(null);
   const [crops, setCrops] = useState([]);
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
-      async function fetchMarket() {
-        try {
-          // Fetch crops
-          const marketRes = await fetch(
-            `${BACKEND_URL}/api/marketPlace/customer/getMarket`,
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          const marketJson = await marketRes.json();
-          console.log(marketJson);
-          setCrops(marketJson);
-        } catch (err) {
-          console.error("Error loading dashboard data", err);
-        }
+    async function fetchMarket() {
+      try {
+        const marketRes = await fetch(
+          `${BACKEND_URL}/api/marketPlace/customer/getMarket`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const marketJson = await marketRes.json();
+        setCrops(marketJson);
+      } catch (err) {
+        console.error("Error loading market data", err);
       }
-      fetchMarket();
-    }, []);
-  
+    }
+    fetchMarket();
+  }, []);
+
+  const handleAddToCart = (crop) => {
+    const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    const cropId = crop._id;
+
+    const index = existingCart.findIndex((item) => item.id === cropId);
+
+    if (index === -1) {
+      existingCart.push({
+        id: cropId,
+        cropName: crop.cropName,
+        cropPrice: crop.cropPrice,
+        cropQuantity: 1,
+      });
+    } else {
+      existingCart[index].cropQuantity += 1;
+    }
+
+    localStorage.setItem("cartItems", JSON.stringify(existingCart));
+    console.log("Cart after adding:", existingCart);
+
+    setSelectedCrop(crop);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 2000);
+  };
 
   return (
     <div className="flex min-h-screen bg-[#f6fbf9] text-gray-800 font-poppins">
-      <Sidebar customNav={[{ label: "Marketplace", path: "/marketplace" }]} activePage="Marketplace" />
+      <Sidebar
+        customNav={[{ label: "Marketplace", path: "/marketplace" }]}
+        activePage="Marketplace"
+      />
 
       <div className="flex-1 flex flex-col">
         <HeaderCustomer />
 
         <main className="flex-1 p-8">
           <h2 className="text-2xl font-semibold mb-4">Available Crops</h2>
+
           <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
             {crops.map((crop) => (
-              <div key={crop.id} onClick={() => setSelectedCrop(crop)}>
+              <div key={crop._id} onClick={() => handleAddToCart(crop)}>
                 <CropCardCustomer {...crop} />
               </div>
             ))}
@@ -58,6 +84,12 @@ export default function CustomerDashboard() {
 
         <CheckoutButton />
         <CropModal crop={selectedCrop} onClose={() => setSelectedCrop(null)} />
+
+        {showToast && (
+          <div className="fixed bottom-5 right-5 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50">
+            Crop added to cart!
+          </div>
+        )}
       </div>
     </div>
   );
