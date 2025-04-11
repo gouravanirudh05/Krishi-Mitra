@@ -3,7 +3,7 @@
 <div align="center">
     <img src="frontend/src/assets/white-logo.png" alt="Logo" width="100" height="100">
 
-  <h3 align="center">KrishiMitra</h3>
+  <h1 align="center">KrishiMitra</h1>
 
   <p align="center">
     Just a great tool to empower farmers
@@ -25,6 +25,9 @@
 4. [Tech Stack](#-tech-stack)
 5. [Architecture / Diagram (if any)](#-architecture--diagram-if-any)
 6. [Installation & Usage](#-installation--usage)
+    - [Steps to run front end](#-steps-to-run-front-end)
+    - [Steps to run back end](#-steps-to-run-back-end)
+    - [Steps to run ml model](#-steps-to-run-ml-model)
 7. [Team Members](#-team-members)
 
 ## 🧠 Introduction
@@ -71,6 +74,7 @@ This solution brings accessibility, empowerment, and profitability directly into
 
 ## 🛠️ Tech Stack
 
+[![twilio][twilio]][twilio-url]
 [![React][React.js]][React-url]
 [![TailwindCSS][Tailwind]][tailwind-url]
 [![Node.js][Nodejs]][Nodejs-url]
@@ -84,7 +88,7 @@ This solution brings accessibility, empowerment, and profitability directly into
 [![pandas][pandas]][pandas-url]
 [![fastapi][fastapi]][fastapi-url]
 
-## 🧩 Architecture / Diagram (if any)
+## 🧩 Architecture Diagram
 
 ![Architecture Design Shot](readme-assets/technical-approach.png)
 
@@ -94,9 +98,21 @@ This solution brings accessibility, empowerment, and profitability directly into
 
 - Node.js >= 20
 - Python >= 3.12
-- ngrok
+- Ngrok
 
 ### Steps
+
+Firstly, set up the following enviorment variables and store it in a `.env` in backend folder (one will have to set up a `twilio` account first)
+
+```bash
+MONGO_URI
+JWT_SECRET_KEY
+GEMINI_API_KEY
+TWILIO_ACCOUNT_SID
+TWILIO_AUTH_TOKEN
+TWILIO_PHONE
+ACCUWEATHER_API_KEY
+```
 
 ```bash
 # Clone the repository
@@ -121,8 +137,17 @@ npm run dev
 
 ### Steps to run backend
 
-```bash
+<!-- need to add -->
 
+```bash
+# Navigate to backend
+cd backend
+
+# Install packages
+npm install
+
+# Start server
+node server.js
 ```
 
 ### Steps to run ml-model
@@ -134,8 +159,10 @@ Here one must ensure of that the datasets
 
 The columns respectively are:
 
-- fdf
-- fdfd
+<!-- Need to change -->
+
+- `datesk,Item Name,Date,price` (`dataesk` is just Date but a number)
+- `Temparature,Humidity,Moisture,Soil Type,Crop Type,Nitrogen,Potassium,Phosphorous,Fertilizer Name,fertilise_once_in_days`
 
 ```bash
 # Navigate to ml-model
@@ -205,17 +232,17 @@ recommend-fertilizer
 
 One can learn more about this from the `/docs` page.
 
-<!-- LICENSE -->
+## Team Members
 
-## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+<!-- add conetnt boy -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
+[twilio]: https://img.shields.io/badge/Twilio-F22F46?style=for-the-badge&logo=Twilio&logoColor=white
+[twilio-url]: https://www.twilio.com/en-us
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
 [Tailwind]: https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white
