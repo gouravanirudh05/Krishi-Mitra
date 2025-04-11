@@ -220,6 +220,16 @@ router.get("/customer/getCrops", async (req, res) => {
     }
 });
 
+router.get("/farmer/getProfile", farmerAuthMiddleware, async (req, res) => {
+    try {
+        const farmer = Farmer.findById(req.farmer.id);
+        res.json({farmer, sucess: true});
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
 router.post("/farmerCall/addCrop", async (req, res) => {
     const { phoneNumber, cropName } = req.body;
   
@@ -274,5 +284,6 @@ router.post("/farmerCall/addCrop", async (req, res) => {
   
     // res.json({ success: true });
   });
+
 
 export default router;
