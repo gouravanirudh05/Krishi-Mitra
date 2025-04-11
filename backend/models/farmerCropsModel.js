@@ -5,7 +5,7 @@ const FarmerCrop = mongoose.model('FarmerCrop', new mongoose.Schema({
     cropId: { type: mongoose.Schema.Types.ObjectId, ref: "Crop" },
     date: Date,
     cost: Number,
-    
+    cropName: String
 }));
 
 export default FarmerCrop;

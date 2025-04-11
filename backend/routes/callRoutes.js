@@ -2,6 +2,7 @@ import { Router } from 'express';
 import Farmer from "../models/farmerModel.js";
 import getLocationHierarchy from "../gemini.js";
 import NPK from "../models/NPKModel.js";
+import FarmerCrop from "../models/farmerCropsModel.js";
 import axios from "axios";
 
 const router = Router();
@@ -87,6 +88,27 @@ router.post("/getRecommendations", async (req, res) => {
     catch(err){
       res.status(500).json({error: err});
     }
+});
+
+router.post("/getIrrigation", async (req, res) => {
+  try{
+    const {phoneNumber} = req.body;
+    console.log(phoneNumber);
+    const farmer = await Farmer.findOne({phoneNumber});
+    if(!farmer){
+      console.log("Farmer not found");
+      res.status(404).json({recommendations: null});
+      return;
+    }
+    const {_id,town, district,state} = farmer;
+    console.log(_id,town,district,state);
+    const farmerCrop = await FarmerCrop.find({farmerId: _id});  
+    console.log(farmerCrop);
+    res.json({farmerCrop});
+  }
+  catch(err){
+    res.status(500).json({error: err});
+  }
 });
 
 async function getNPKValues(town,district,state){
