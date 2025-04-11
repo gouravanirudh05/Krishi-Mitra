@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
+import CropDetails from "./pages/CropDetails";
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const Login = lazy(() => import('./pages/Login'));
 const SignUp = lazy(() => import('./pages/SignUp'));
@@ -26,6 +27,9 @@ function App() {
           <Route path="/planner" element={<Planner />} />
           <Route path="/crops" element={<Crops />} />
           <Route path="/market" element={<Market />} />
+          <Route path="/crops/:cropId" element={<CropDetails />} />
+
+
           {/* Add more routes as needed */}
         </Routes>
       </Suspense>

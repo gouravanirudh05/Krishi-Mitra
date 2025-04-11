@@ -1,8 +1,22 @@
 import React from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
+import { Link } from "react-router-dom";
 
-export default function CropsDashboard() {
+export default function Crops() {
+    const crops = [
+        { id: "wheat", name: "Wheat", color: "#fff4f4", emoji: "🌾", sales: "1,200 kg", growth: "+5%" },
+        { id: "rice", name: "Rice", color: "#fff8e1", emoji: "🍚", sales: "2,500 kg", growth: "+8%" },
+        { id: "maize", name: "Maize", color: "#e9fef3", emoji: "🌽", sales: "1,800 kg", growth: "+3%" },
+    ];
+
+    const scheduleData = [
+        { name: "Urea", percent: "70%", color: "bg-green-500" },
+        { name: "DAP", percent: "50%", color: "bg-blue-500" },
+        { name: "Potash", percent: "35%", color: "bg-yellow-500" },
+        { name: "Pesticide A", percent: "60%", color: "bg-red-500" },
+    ];
+
     return (
         <div className="flex min-h-screen bg-[#f6fbf9] text-gray-800 font-poppins">
             <Sidebar />
@@ -17,19 +31,22 @@ export default function CropsDashboard() {
                         <h3 className="font-semibold mb-2 text-lg">Your Crops</h3>
                         <p className="text-sm text-gray-500 mb-4">Farm summary</p>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-                            {["#fff4f4", "#fff8e1", "#e9fef3"].map((bg, i) => (
-                                <div
-                                    key={i}
-                                    className={`rounded-xl p-4 shadow`}
-                                    style={{ backgroundColor: bg }}
-                                >
-                                    <div className="text-3xl">📦</div>
-                                    <h4 className="font-bold mt-2">Crop Name {i + 1}</h4>
-                                    <p className="text-sm text-gray-500">Total Sales</p>
-                                    <p className="text-pink-600 text-xs">+8% from yesterday</p>
-                                </div>
+                            {crops.map((crop) => (
+                                <Link to={`/crops/${crop.id}`}>
+                                    <div
+                                        className="rounded-xl p-4 shadow hover:scale-[1.02] transition-transform duration-200"
+                                        style={{ backgroundColor: crop.color }}
+                                    >
+                                        <div className="text-3xl">{crop.emoji}</div>
+                                        <h4 className="font-bold mt-2">{crop.name}</h4>
+                                        <p className="text-sm text-gray-500">Total Yield: {crop.sales}</p>
+                                        <p className="text-green-600 text-xs">{crop.growth} from last week</p>
+                                    </div>
+                                </Link>
                             ))}
-                            <div className="flex justify-center items-center bg-gray-100 text-4xl rounded-xl shadow">
+
+                            {/* "Add New Crop" Card */}
+                            <div className="flex justify-center items-center bg-gray-100 text-4xl rounded-xl shadow cursor-pointer">
                                 +
                             </div>
                         </div>
@@ -43,9 +60,8 @@ export default function CropsDashboard() {
                                 [Line Chart]
                             </div>
                             <div className="flex justify-around mt-4 text-xs">
-                                <span className="text-purple-600">● Loyal</span>
-                                <span className="text-red-500">● New</span>
-                                <span className="text-green-500">● Unique</span>
+                                <span className="text-purple-600">● Predicted</span>
+                                <span className="text-blue-500">● Actual</span>
                             </div>
                         </div>
                         <div className="bg-white rounded-xl shadow p-4 col-span-2 lg:col-span-1">
@@ -54,8 +70,8 @@ export default function CropsDashboard() {
                                 [Bar Chart]
                             </div>
                             <div className="flex justify-around mt-4 text-xs">
-                                <span className="text-blue-500">● Online Sales</span>
-                                <span className="text-green-500">● Offline Sales</span>
+                                <span className="text-blue-500">● Water Used</span>
+                                <span className="text-green-500">● Recommended</span>
                             </div>
                         </div>
                     </section>
@@ -68,8 +84,8 @@ export default function CropsDashboard() {
                                 [Area Chart]
                             </div>
                             <div className="flex justify-around text-xs mt-4">
-                                <span className="text-gray-500">Last Month: $3,004</span>
-                                <span className="text-green-600">This Month: $4,504</span>
+                                <span className="text-gray-500">Est: 3 weeks</span>
+                                <span className="text-green-600">Progress: 65%</span>
                             </div>
                         </div>
                         <div className="bg-white rounded-xl shadow p-4 col-span-2">
@@ -78,8 +94,8 @@ export default function CropsDashboard() {
                                 [Grouped Bar Chart]
                             </div>
                             <div className="flex justify-around text-xs mt-4">
-                                <span className="text-green-600">Reality Sales: 8,823</span>
-                                <span className="text-yellow-500">Target Sales: 12,122</span>
+                                <span className="text-green-600">Expected: 3,200 kg</span>
+                                <span className="text-yellow-500">Target: 4,000 kg</span>
                             </div>
                         </div>
                     </section>
@@ -93,17 +109,12 @@ export default function CropsDashboard() {
                                     <tr className="text-left">
                                         <th>#</th>
                                         <th>Name</th>
-                                        <th>Popularity</th>
-                                        <th>Sales</th>
+                                        <th>Usage</th>
+                                        <th className="text-right">Progress</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {[
-                                        ["Home Decor Range", "45%", "bg-blue-500"],
-                                        ["Disney Pink Bag", "29%", "bg-green-500"],
-                                        ["Bathroom Essentials", "18%", "bg-purple-500"],
-                                        ["Apple Watches", "25%", "bg-orange-500"],
-                                    ].map(([name, percent, color], idx) => (
+                                    {scheduleData.map(({ name, percent, color }, idx) => (
                                         <tr key={idx} className="border-t">
                                             <td>{`0${idx + 1}`}</td>
                                             <td>{name}</td>
@@ -127,8 +138,8 @@ export default function CropsDashboard() {
                                 [Stacked Bar Chart]
                             </div>
                             <div className="flex justify-around text-xs mt-4">
-                                <span className="text-blue-600">Volume: 1,135</span>
-                                <span className="text-green-500">Services: 635</span>
+                                <span className="text-blue-600">Tips Shared: 135</span>
+                                <span className="text-green-500">Views: 863</span>
                             </div>
                         </div>
                     </section>
