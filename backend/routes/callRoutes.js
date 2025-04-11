@@ -2,6 +2,7 @@ import { Router } from 'express';
 import Farmer from "../models/farmerModel.js";
 import NPK from "../models/NPKModel.js";
 import FarmerCrop from "../models/farmerCropsModel.js";
+import Crop from '../models/cropModel.js';
 import axios from "axios";
 import mongoose from "mongoose";
 import {getLocationHierarchy,getCropGrowthStage} from "../models/gemini.js";
@@ -127,6 +128,61 @@ router.post("/getIrrigation", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+router.post("/farmer/addCrop", async (req, res) => {
+    const { phoneNumber, cropName } = req.body;
+  
+    const farmer = await Farmer.findOne({phoneNumber});
+  
+    if(!farmer)
+      return res.status(404).json({success: false, message: "Farmer does not exists."});
+  
+    const kc = await Kc.findOne({name: cropName});
+  
+    if(!kc)
+      return res.status(404).json({success: false, message: "Crop does not exists."});
+  
+    const farmerCrop = new FarmerCrop({farmerId: farmer._id, cropId: kc._id, cropName: kc.Crop, date: new Date()});
+  
+    await farmerCrop.save();
+
+    const {nitrogenVal, potassiumVal, phosphorousVal} = await getNPKValues(farmer.town, farmer.district, farmer.state);
+    const {temperature, humidity} = await getWeatherByLocation1(farmer.town);
+
+    const requestBody = {
+            Temparature: temperature,
+            Humidity: humidity,
+            Moisture: 40.0,
+            Soil_Type: "Clayey",
+            Nitrogen: nitrogenVal,
+            Potassium: potassiumVal,
+            Phosphorous: phosphorousVal,
+            crop_name: cropName
+          };
+      
+          try {
+            const response = await axios.post("https://5b56-14-195-89-114.ngrok-free.app/recommend-fertilizer", requestBody);
+            const fertilizer = response.data;
+            console.log(fertilizer);
+            res.json({fertilizer});
+          } catch (error) {
+            console.error("Fertilizer recommendation failed:", error.response?.data || error.message);
+            res.status(500).json({ success: false, message: "Fertilizer recommendation failed", error: error.message });
+          }
+          
+  
+    // const interval = `${crop.fertilizerPeriod} days`;
+  
+    // // Create a unique job name per farmer+crop combo to avoid duplicates
+    // const uniqueJobName = `reminder-${farmer._id}-${cropName}`;
+  
+    // await agenda.every(interval, 'send fertilizer reminder', {
+    //   farmerId: farmer._id.toString(),
+    //   cropName: cropName
+    // }, { jobId: uniqueJobName });
+  
+    // res.json({ success: true });
+  });
 
 async function getNPKValues(town,district,state){
   //const district = getLocationHierarchy(state, town).district.toUpperCase().trim();
