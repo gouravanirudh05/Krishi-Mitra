@@ -7,7 +7,7 @@ const farmerAuthMiddleware = async (req, res, next) => {
         const jwtKey = process.env.JWT_SECRET_KEY;
         const decoded = jwt.verify(token, jwtKey);
 
-        const farmer = await Farmer.findOne({ _id: decoded.id });
+        const farmer = await Farmer.findOne({ _id: decoded.farmer });
         if (!farmer) {
             throw new Error();
         }

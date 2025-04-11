@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 
-const Farmer = mongoose.model('Farmer', new mongoose.Schema({
+const Customer = mongoose.model('Customer', new mongoose.Schema({
     name: String,
     phoneNumber: String,
 }));
 
-export default Farmer;
+export default Customer;

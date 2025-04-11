@@ -44,7 +44,7 @@ export default function Login() {
     console.log("Phone:", phoneNumber, "OTP:", otpValue)
     if(!receivedOTP){
       const response = await fetch(
-        `${BACKEND_URL}/api/sendOtp`,
+        `${BACKEND_URL}/api/marketPlace/sendOtp`,
         {
           method: "POST",
           headers: {
@@ -61,7 +61,7 @@ export default function Login() {
     }
     else{
       const response = await fetch(
-        `${BACKEND_URL}/api/verifyOtp`,
+        `${BACKEND_URL}/api/marketPlace/verifyOtp`,
         {
           method: "POST",
           headers: {

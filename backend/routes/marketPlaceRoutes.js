@@ -9,10 +9,16 @@ import NPK from "../models/NPKModel.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import axios from "axios";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const router = Router();
 
 const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+console.log("SID:", process.env.TWILIO_ACCOUNT_SID);
+console.log("TOKEN:", process.env.TWILIO_AUTH_TOKEN);
+
 
 async function getWeatherByLocation1(location) {
     //const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric`;
@@ -109,6 +115,7 @@ async function getNPKValues(district){
 router.post("/sendOtp", async (req, res) => {
     try {
       const { phoneNumber } = req.body;
+      console.log(phoneNumber);
   
       const farmer = await Farmer.findOne({phoneNumber});
   
@@ -129,6 +136,7 @@ router.post("/sendOtp", async (req, res) => {
       res.json({ success: true, message: "OTP sent" });
     } catch (err) {
       res.status(500).json({ success: false, message: "SMS failed", error: err.message });
+      console.log(err.message);
     }
   });
   
@@ -145,7 +153,7 @@ router.post("/verifyOtp", async (req, res) => {
 
     await Otp.deleteMany({ phoneNumber });
 
-    const token = jwt.sign({ phoneNumber, farmer: farmer._id }, process.env.JWT_SECRET_KEY, { expiresIn: "3h" });
+    const token = jwt.sign({ phoneNumber, farmer: farmer._id }, process.env.JWT_SECRET_KEY, { expiresIn: "24h" });
 
     res.json({ success: true, token });
 });
@@ -178,38 +186,18 @@ router.get("/farmer/getCrops", farmerAuthMiddleware, async (req, res) => {
         }
 
         const farmerCrops = await FarmerCrop.find({ farmerId: req.farmer.id })
-            .populate("cropId"); // This pulls in the full Crop details
 
-        const crops = farmerCrops.map(fc => ({
-            crop: fc.cropId,      // This contains the populated Crop object
-            date: fc.date,
-            cost: fc.cost
-        }));
+        // const crops = farmerCrops.map(fc => ({
+        //     crop: fc.cropId,      // This contains the populated Crop object
+        //     date: fc.date,
+        //     cost: fc.cost
+        // }));
 
-        res.json({ success: true, crops });
+        res.json({ success: true, farmerCrops });
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: "Server error" });
     }
-});
-
-router.post("/farmer/addCrop", farmerAuthMiddleware, async (req, res) => {
-    const { cropName, cost } = req.body;
-
-    const farmer = await Farmer.findById(req.farmer.id);
-
-    if(!farmer)
-        return res.status(404).json({success: false, message: "Farmer does not exists."});
-
-    const crop = await Crop.findOne({cropName});
-    if(!crop)
-        return res.status(404).json({success: false, message: "Farmer does not exists."});
-
-    const farmerCrop = new FarmerCrop({farmerId: farmer._id, cropId: crop._id, date: new Date(), cost});
-
-    await farmerCrop.save();
-
-    res.json({ success: true, token });
 });
 
 router.get("/customer/getCrops", async (req, res) => {
