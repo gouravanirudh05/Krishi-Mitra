@@ -17,6 +17,7 @@ export default function CropDetails() {
                 <Header />
 
                 <main className="p-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
                     {/* Crop Info Card */}
                     <div className="bg-white rounded-2xl p-6 shadow col-span-1 xl:col-span-1">
                         <h2 className="text-xl font-semibold mb-4">Crop Information</h2>

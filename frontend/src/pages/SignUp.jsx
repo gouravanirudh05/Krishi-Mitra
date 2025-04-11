@@ -1,7 +1,9 @@
 import React from "react";
 import LoginPageBackground from "../assets/signupbackground.jpg";
 import { Link } from 'react-router-dom';
-export default function SignupForm() {
+const BACKEND_URL =
+  import.meta.env.VITE_APP_BACKEND_URL ?? "http://localhost:5000";
+export default function Signup() {
   return (
     <div
       className="min-h-screen w-full flex items-center justify-center bg-cover bg-center px-4 sm:px-8"
@@ -24,7 +26,7 @@ export default function SignupForm() {
             />
           </div>
 
-        
+
           <div>
             <label className="text-xs font-bold text-[#1e0e62]">LAST NAME</label>
             <input
@@ -32,8 +34,20 @@ export default function SignupForm() {
               className="w-full border rounded-full px-4 py-2 mt-1 focus:outline-none"
             />
           </div>
+          <div>
+            <label className="text-xs font-bold text-[#1e0e62]">ROLE</label>
+            <select
+              className="w-full border rounded-full px-4 py-2 mt-1 focus:outline-none"
+              defaultValue=""
+            >
+              <option value="" disabled>Select your role</option>
+              <option value="farmer">Farmer</option>
+              <option value="customer">Customer</option>
+            </select>
+          </div>
 
-        
+
+
           <div>
             <label className="text-xs font-bold text-[#1e0e62]">COUNTRY</label>
             <input
@@ -42,7 +56,7 @@ export default function SignupForm() {
             />
           </div>
 
-        
+
           <div>
             <label className="text-xs font-bold text-[#1e0e62]">STATE</label>
             <input
@@ -51,7 +65,7 @@ export default function SignupForm() {
             />
           </div>
 
-        
+
           <div>
             <label className="text-xs font-bold text-[#1e0e62]">CITY/DISTRICT</label>
             <input
@@ -101,8 +115,8 @@ export default function SignupForm() {
         <p className="text-xs text-gray-400 text-center mt-6">
           ALREADY HAVE AN ACCOUNT?{" "}
           <Link to="/login" className="text-green-600 font-bold cursor-pointer">
-  SIGN IN
-</Link>
+            SIGN IN
+          </Link>
         </p>
       </div>
     </div>

@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import CropDetails from "./pages/CropDetails";
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const Login = lazy(() => import('./pages/Login'));
@@ -15,7 +17,6 @@ function App() {
   return (
     <Router>
       <Suspense fallback={<div className="text-center mt-10 text-lg text-green-600 font-semibold">Loading...</div>}>
-
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
@@ -28,11 +29,10 @@ function App() {
           <Route path="/crops" element={<Crops />} />
           <Route path="/market" element={<Market />} />
           <Route path="/crops/:cropId" element={<CropDetails />} />
-
-
           {/* Add more routes as needed */}
         </Routes>
       </Suspense>
+      <ToastContainer />
     </Router>
   );
 }
