@@ -25,10 +25,10 @@
 4. [Tech Stack](#-tech-stack)
 5. [Architecture / Diagram (if any)](#-architecture--diagram-if-any)
 6. [Installation & Usage](#-installation--usage)
-    - [Steps to run front end](#-steps-to-run-front-end)
-    - [Steps to run back end](#-steps-to-run-back-end)
-    - [Steps to run ml model](#-steps-to-run-ml-model)
-7. [Team Members](#-team-members)
+    - [Steps to run front end](#steps-to-run-front-end)
+    - [Steps to run back end](#steps-to-run-back-end)
+    - [Steps to run ml model](#steps-to-run-ml-model)
+7. [Team Members](#team-members)
 
 ## 🧠 Introduction
 
