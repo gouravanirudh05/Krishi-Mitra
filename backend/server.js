@@ -48,7 +48,8 @@ app.post("/api/checkFarmer", async (req, res) => {
 app.post("/api/registerFarmer", async (req, res) => {
     try{
       const {name, phoneNumber, townBody, landArea} = req.body;
-      console.log(name);
+      console.log(name, phoneNumber, townBody, landArea);
+
       const {state, district, block, town} = await getLocationHierarchy(townBody);
       console.log(state, district, block, town);
       const oldFarmer = await Farmer.findOne({phoneNumber});
@@ -64,3 +65,11 @@ app.post("/api/registerFarmer", async (req, res) => {
       res.status(500).json({error: err});
     }
 });
+
+
+// (async () => {
+//   const townBody = "Puttur";
+
+//   const {state, district, block, town} = await getLocationHierarchy(townBody);
+//   console.log(state, district, block, town);
+// })();

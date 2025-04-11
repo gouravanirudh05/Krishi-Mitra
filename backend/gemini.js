@@ -6,26 +6,31 @@ dotenv.config();
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY});
 
 async function getLocationHierarchy(town) {
-    const prompt = `
+  const prompt = `
   You are an expert in Indian administrative geography.
   
-  Given the following town, return a JSON object with the corrected and structured format:
+  Given the name of a town or village, return a JSON object with the corrected and structured administrative hierarchy in India. Ensure all names are properly capitalized and standardized.
+  
+  Format:
   {
-    "state": "<corrected full state name in India>",
-    "district": "<the correct district that the town belongs to in the given state>",
-    "block": "<the correct block or taluka in that district that the town belongs to>",
-    "town": "<corrected town or village name>"
+    "state": "<Full, corrected state name in India>",
+    "district": "<Correct district name within the state>",
+    "block": "<Correct block or taluka within the district>",
+    "town": "<Corrected town or village name>"
   }
   
   Town: ${town}
   
-  Only return the JSON object. Do not include any explanation.
+  Respond with only the JSON object. Do not include any additional explanation or text.
   `;
+  
   
     const response = await ai.models.generateContent({
       model: "gemini-1.5-pro", // or "gemini-2.0-flash" if you prefer speed over depth
       contents: [{ role: "user", parts: [{ text: prompt }] }],
     });
+
+    console.log("responseee: "+response.text);
   
     try {
       const jsonText = response.text.trim().match(/\{[\s\S]*\}/)[0];
