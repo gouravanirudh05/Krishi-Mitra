@@ -2,6 +2,9 @@ import { Router } from 'express';
 import twilio from 'twilio';
 import {Otp} from "../models/otpModel.js";
 import Farmer from '../models/farmerModel.js';
+import Crop from '../models/cropModel.js';
+import FarmerCrop from '../models/farmerCropsModel.js';
+import farmerAuthMiddleware from '../middlewares/farmerAuthMiddleware.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -53,4 +56,89 @@ router.post("/verifyOtp", async (req, res) => {
     res.json({ success: true, token });
 });
 
+router.post("/farmer/addCrop", farmerAuthMiddleware, async (req, res) => {
+    const { cropName, cost } = req.body;
+
+    const farmer = await Farmer.findById(req.farmer.id);
+
+    if(!farmer)
+        return res.status(404).json({success: false, message: "Farmer does not exists."});
+
+    const crop = await Crop.findOne({cropName});
+    if(!crop)
+        return res.status(404).json({success: false, message: "Farmer does not exists."});
+
+    const farmerCrop = new FarmerCrop({farmerId: farmer._id, cropId: crop._id, date: new Date(), cost});
+
+    await farmerCrop.save();
+
+    res.json({ success: true, token });
+});
+
+router.get("/farmer/getCrops", farmerAuthMiddleware, async (req, res) => {
+    try {
+        const farmer = await Farmer.findById(req.farmer.id);
+
+        if (!farmer) {
+            return res.status(404).json({ success: false, message: "Farmer does not exist." });
+        }
+
+        const farmerCrops = await FarmerCrop.find({ farmerId: req.farmer.id })
+            .populate("cropId"); // This pulls in the full Crop details
+
+        const crops = farmerCrops.map(fc => ({
+            crop: fc.cropId,      // This contains the populated Crop object
+            date: fc.date,
+            cost: fc.cost
+        }));
+
+        res.json({ success: true, crops });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+});
+
+router.post("/farmer/addCrop", farmerAuthMiddleware, async (req, res) => {
+    const { cropName, cost } = req.body;
+
+    const farmer = await Farmer.findById(req.farmer.id);
+
+    if(!farmer)
+        return res.status(404).json({success: false, message: "Farmer does not exists."});
+
+    const crop = await Crop.findOne({cropName});
+    if(!crop)
+        return res.status(404).json({success: false, message: "Farmer does not exists."});
+
+    const farmerCrop = new FarmerCrop({farmerId: farmer._id, cropId: crop._id, date: new Date(), cost});
+
+    await farmerCrop.save();
+
+    res.json({ success: true, token });
+});
+
+router.get("/customer/getCrops", customerAuthMiddleware, async (req, res) => {
+    try {
+        const farmer = await Farmer.findById(req.farmer.id);
+
+        if (!farmer) {
+            return res.status(404).json({ success: false, message: "Farmer does not exist." });
+        }
+
+        const farmerCrops = await FarmerCrop.find({ farmerId: req.farmer.id })
+            .populate("cropId"); // This pulls in the full Crop details
+
+        const crops = farmerCrops.map(fc => ({
+            crop: fc.cropId,      // This contains the populated Crop object
+            date: fc.date,
+            cost: fc.cost
+        }));
+
+        res.json({ success: true, crops });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+});
 export default router;
