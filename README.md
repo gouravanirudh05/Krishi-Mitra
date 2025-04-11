@@ -71,11 +71,18 @@ This solution brings accessibility, empowerment, and profitability directly into
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** _e.g., React, Vue, Flutter_
-- **Backend:** _e.g., Node.js, Django, Firebase_
-- **Database:** _e.g., MongoDB, PostgreSQL_
-- **APIs / Libraries:** _e.g., OpenAI, Google Maps API, TensorFlow_
-- **Tools:** _e.g., Docker, GitHub Actions, Figma_
+[![React][React.js]][React-url]
+[![TailwindCSS][Tailwind]][tailwind-url]
+[![Node.js][Nodejs]][Nodejs-url]
+[![Express.js][Express.js]][express-url]
+[![MongoDB][MongoDB]][mongodb-url]
+[![Ngrok][Ngrok]][Ngrok-url]
+[![Npm][Npm]][Npm-url]
+[![python][python]][python-url]
+[![scikit][scikit]][scikit-url]
+[![numpy][numpy]][numpy-url]
+[![pandas][pandas]][pandas-url]
+[![fastapi][fastapi]][fastapi-url]
 
 ## 🧩 Architecture / Diagram (if any)
 
@@ -85,25 +92,151 @@ This solution brings accessibility, empowerment, and profitability directly into
 
 ### Prerequisites
 
-- Node.js / Python / other
-- Dependencies listed in `package.json` or `requirements.txt`
+- Node.js >= 20
+- Python >= 3.12
+- ngrok
 
 ### Steps
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-repo-url.git
+git clone https://github.com/FantomCode25/GG_Coders.git
 
 # Navigate into the project directory
-cd your-project
+cd GG_Coders
+```
 
-# Install dependencies
+### Steps to run frontend
+
+```bash
+# Navigate to frontend
+cd frontend
+
+# Install npm packages
 npm install
 
-# Start the development server
-npm start
-
-_Include system architecture, data flow diagrams, or UI wireframes if available._
-
-> 📌 **Tip:** You can add an image like this:
+# Run the website
+npm run dev
 ```
+
+### Steps to run backend
+
+```bash
+
+```
+
+### Steps to run ml-model
+
+Here one must ensure of that the datasets
+
+- `datasets/crop-predictor-with-fertilising-days.csv`
+- `datasets/vegetable-prices.csv`
+
+The columns respectively are:
+
+- fdf
+- fdfd
+
+```bash
+# Navigate to ml-model
+cd ml-model
+
+# Install Python packages
+python -m env .venv
+source .venv/bin/activate # on linux
+.venv\Scripts\activat # on windows
+pip install -r requirements.txt
+
+# Run the ML model
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+To share your API over the internet we will make use of ngrok, run the following on a separate terminal. Use the link given by the below commands for your API calls.
+
+```bash
+# This just makes your local domain a public domain
+ngork http 8000
+```
+
+#### Steps to make API call to access ML model
+
+With the link obtained from `ngrok` use one can use the following `POST` request
+
+- /predict-price
+- /predict-crop-fertilizer
+- /recommend-fertilizer
+
+Each of them has the following attributes
+
+```json
+predict-price
+{
+  "item_name": "string",
+  "date": "string"
+}
+```
+
+```json
+predict-crop-fertilizer
+{
+  "Temparature": 0,
+  "Humidity": 0,
+  "Moisture": 0,
+  "Soil_Type": "string",
+  "Nitrogen": 0,
+  "Potassium": 0,
+  "Phosphorous": 0
+}
+```
+
+```json
+recommend-fertilizer
+{
+  "Temparature": 0,
+  "Humidity": 0,
+  "Moisture": 0,
+  "Soil_Type": "string",
+  "Nitrogen": 0,
+  "Potassium": 0,
+  "Phosphorous": 0,
+  "crop_name": "string"
+}
+```
+
+One can learn more about this from the `/docs` page.
+
+<!-- LICENSE -->
+
+## License
+
+Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React-url]: https://reactjs.org/
+[Tailwind]: https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white
+[Tailwind-url]: https://tailwindcss.com/
+[Nodejs]: https://img.shields.io/badge/Node.js-5FA04E?logo=nodedotjs&logoColor=fff&style=for-the-badge
+[Nodejs-url]: https://nodejs.org/en
+[Express.js]: https://img.shields.io/badge/Express%20js-000000?style=for-the-badge&logo=express&logoColor=white
+[Express-url]: https://expressjs.com/
+[MongoDB]: https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white
+[MongoDB-url]: https://www.mongodb.com/
+[Ngrok]: https://img.shields.io/badge/ngrok-140648?style=for-the-badge&logo=Ngrok&logoColor=white
+[Ngrok-url]: https://ngrok.com/
+[Npm]: https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=whit
+[Npm-url]: https://www.npmjs.com/
+[python]: https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue
+[python-url]: https://python.org
+[scikit]: https://img.shields.io/badge/scikit_learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white
+[scikit-url]: https://scikit-learn.org/stable/
+[numpy]: https://img.shields.io/badge/Numpy-777BB4?style=for-the-badge&logo=numpy&logoColor=whit
+[numpy-url]: https://numpy.org/
+[pandas]: https://img.shields.io/badge/Pandas-2C2D72?style=for-the-badge&logo=pandas&logoColor=white
+[pandas-url]: https://pandas.pydata.org/
+[fastapi]: https://img.shields.io/badge/fastapi-109989?style=for-the-badge&logo=FASTAPI&logoColor=white
+[fastapi-url]: https://fastapi.tiangolo.com/
