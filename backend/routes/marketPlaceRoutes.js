@@ -118,19 +118,15 @@ router.post("/farmer/addCrop", farmerAuthMiddleware, async (req, res) => {
     res.json({ success: true, token });
 });
 
-router.get("/customer/getCrops", customerAuthMiddleware, async (req, res) => {
+router.get("/customer/getCrops", async (req, res) => {
     try {
-        const farmer = await Farmer.findById(req.farmer.id);
+        const allFarmerCrops = await FarmerCrop.find()
+            .populate("cropId")   // Get crop details
+            .populate("farmerId"); // Get farmer details
 
-        if (!farmer) {
-            return res.status(404).json({ success: false, message: "Farmer does not exist." });
-        }
-
-        const farmerCrops = await FarmerCrop.find({ farmerId: req.farmer.id })
-            .populate("cropId"); // This pulls in the full Crop details
-
-        const crops = farmerCrops.map(fc => ({
-            crop: fc.cropId,      // This contains the populated Crop object
+        const crops = allFarmerCrops.map(fc => ({
+            crop: fc.cropId,     // Full crop info
+            farmer: fc.farmerId, // Full farmer info
             date: fc.date,
             cost: fc.cost
         }));
@@ -141,4 +137,5 @@ router.get("/customer/getCrops", customerAuthMiddleware, async (req, res) => {
         res.status(500).json({ success: false, message: "Server error" });
     }
 });
+
 export default router;
