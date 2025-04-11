@@ -6,6 +6,7 @@ const Farmer = mongoose.model('Farmer', new mongoose.Schema({
     district: String,
     state: String,
     town: String,
+    block: String,
     landArea: Number
 }));
 

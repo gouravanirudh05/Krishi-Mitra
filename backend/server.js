@@ -4,7 +4,8 @@ import cors from "cors";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import Farmer from "./models/farmerModel";
+import Farmer from "./models/farmerModel.js";
+import getLocationHierarchy from "./gemini.js";
 
 dotenv.config();
 
@@ -46,14 +47,16 @@ app.post("/api/checkFarmer", async (req, res) => {
 
 app.post("/api/registerFarmer", async (req, res) => {
     try{
-      const {name, phoneNumber, town, landArea} = req.body;
+      const {name, phoneNumber, townBody, landArea} = req.body;
       console.log(name);
+      const {state, district, block, town} = await getLocationHierarchy(townBody);
+      console.log(state, district, block, town);
       const oldFarmer = await Farmer.findOne({phoneNumber});
       if(oldFarmer){
         res.status(403).json({registered: false, message: 'Farmer already exists'});
         return;
       }
-      const farmer = new Farmer({name, phoneNumber, district, town, state, landArea});
+      const farmer = new Farmer({name, phoneNumber, district, town, block, state, landArea});
       await farmer.save();
       res.json({registered: true});
     }
