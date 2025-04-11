@@ -244,25 +244,17 @@ router.post("/farmer/uploadCrop", farmerAuthMiddleware, async (req, res) => {
     }
   });
 
-router.get("/customer/getCrops", async (req, res) => {
+  router.get("/customer/getMarket", async (req, res) => {
     try {
-        const allFarmerCrops = await FarmerCrop.find()
-            .populate("cropId")   // Get crop details
-            .populate("farmerId"); // Get farmer details
-
-        const crops = allFarmerCrops.map(fc => ({
-            crop: fc.cropId,     // Full crop info
-            farmer: fc.farmerId, // Full farmer info
-            date: fc.date,
-            cost: fc.cost
-        }));
-
-        res.json({ success: true, crops });
+      const markets = await Market.find().populate("farmerId", "name"); // populate only the name
+      res.json(markets);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: "Server error" });
+      console.error(error.message);
+      res.status(500).json({ success: false, message: "Server error" });
     }
-});
+  });
+  
+
 
 router.get("/farmer/getProfile", farmerAuthMiddleware, async (req, res) => {
     try {
