@@ -106,8 +106,8 @@ router.post("/getIrrigation", async (req, res) => {
 
     const { _id, town, landArea} = farmer;
     console.log(_id, town);
-    //const {rain,Eto} = await getWeatherByLocation2(town);
-    const rain = 20; const Eto = 2;
+    const {rain,Eto} = await getWeatherByLocation2(town);
+    //const rain = 20; const Eto = 2;
 
     const farmerCrop = await FarmerCrop.find({ farmerId: _id });
     const irrigationResults = [];
@@ -118,7 +118,7 @@ router.post("/getIrrigation", async (req, res) => {
       const sownDate = fc.date.toISOString().split('T')[0];
       console.log(crop, sownDate);
       
-      const irrigationQty = await getIrrigation(town,crop,sownDate,landArea,rain,Eto);
+      const irrigationQty = await getIrrigation(crop,sownDate,landArea,rain,Eto);
       irrigationResults.push({crop,irrigationQty});
     }
     res.json({irrigationResults});
@@ -267,7 +267,7 @@ async function getIrrigation(crop,sownDate,area,rain,Eto)
 {
   //const area=100;
   const stageInfo = await getCropGrowthStage(crop, sownDate, new Date().toISOString().split('T')[0]);
-  console.log(stageInfo);
+  console.log(stageInfo,crop);
   const regex = new RegExp(crop, "i"); // case-insensitive
   const result = await Kc.findOne({ Crop: { $regex: regex } });
   console.log("look here: "+result);
@@ -282,7 +282,7 @@ async function getIrrigation(crop,sownDate,area,rain,Eto)
   //const ETo = calculateET_Hargreaves(tempMax, tempMin, tempMean, latitude, dayOfYear);
   const irrigation=(Eto*kc)-rain;
   if(irrigation<0)
-    irrigation=0;
+    return 0;
   return irrigation*area;
 }
 
