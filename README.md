@@ -65,7 +65,7 @@ Our platform provides a dual-access solution for farmers—via an Android app an
 
 Below is a screenshot of the dashboard interface design (implementation may differ):
 
-[Dashboard Design Shot][readme-assets/Dashboard-Design.jpg]
+![Dashboard Design Shot](readme-assets/Dashboard-Design.jpg)
 
 This solution brings accessibility, empowerment, and profitability directly into the hands of farmers.
 
