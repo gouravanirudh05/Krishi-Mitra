@@ -46,52 +46,134 @@ router.post("/registerFarmer", async (req, res) => {
     }
 });
 
+// router.post("/getRecommendations", async (req, res) => {
+//     try{
+//       const {phoneNumber} = req.body;
+//       console.log(phoneNumber);
+//       const farmer = await Farmer.findOne({phoneNumber});
+//       if(!farmer){
+//         console.log("Farmer not found");
+//         res.status(404).json({recommendations: null});
+//         return;
+//       }
+//       const {town,district,state} = farmer;
+//       console.log(town,district,state);
+//       //const {state, district, block, correctTown} = await getLocationHierarchy(town);
+//       const {nitrogenVal, potassiumVal, phosphorousVal} = await getNPKValues(town, district,state);
+//       console.log(nitrogenVal, potassiumVal, phosphorousVal);
+//       const weather = await getWeatherByLocation1(town);
+//       const { temperature, humidity } = weather;   
+//       console.log(temperature, humidity);
+//       // const fertilizer = "Urea";
+//       const soilType = "Clayey";  
+//       const moisture = 0;
+
+//       console.log(temperature, humidity, moisture, soilType, nitrogenVal, potassiumVal, phosphorousVal);
+
+//       const requestBody = {
+//         Temparature: temperature,
+//         Humidity: humidity,
+//         Moisture: moisture, // If you have this, replace 0
+//         Soil_Type: soilType,
+//         Nitrogen: nitrogenVal,
+//         Potassium: potassiumVal,
+//         Phosphorous: phosphorousVal,
+//         //Fertilizer_Name: fertilizer
+//       };
+
+//       const response = await axios.post(`${process.env.CROP_FERTILIZER_URL}/predict-crop-fertilizer`, requestBody);
+  
+//       const cropRecommendations = response.data.recommendations; // This will be a string crop name
+
+//       var cropPredictedPrices=[];
+//       for(const cropObj of cropRecommendations)
+//       {
+//         const requestBody2 = {
+//           item_name: cropObj.crop,
+//           date: new Date(new Date().setMonth(new Date().getMonth() + 6)).toISOString().split('T')[0],
+//         };
+//         const response2 = await axios.post(`${process.env.CROP_PRICE_URL}/predict-price`, requestBody2);
+//         cropPredictedPrices.push({crop: cropObj.crop, price: response2.data.predicted_price});
+//       }
+      
+//       res.json({cropRecommendations});
+
+//     }
+//     catch(err){
+//       res.status(500).json({error: err});
+//     }
+// });
+
 router.post("/getRecommendations", async (req, res) => {
-    try{
-      const {phoneNumber} = req.body;
-      console.log(phoneNumber);
-      const farmer = await Farmer.findOne({phoneNumber});
-      if(!farmer){
-        console.log("Farmer not found");
-        res.status(404).json({recommendations: null});
-        return;
-      }
-      const {town,district,state} = farmer;
-      console.log(town,district,state);
-      //const {state, district, block, correctTown} = await getLocationHierarchy(town);
-      const {nitrogenVal, potassiumVal, phosphorousVal} = await getNPKValues(town, district,state);
-      console.log(nitrogenVal, potassiumVal, phosphorousVal);
-      const weather = await getWeatherByLocation1(town);
-      const { temperature, humidity } = weather;   
-      console.log(temperature, humidity);
-      const fertilizer = "Urea";
-      const soilType = "Clayey";  
-      const moisture = 0;
+  try {
+    const { phoneNumber } = req.body;
+    console.log("reached recommendations");
 
-      console.log(temperature, humidity, moisture, soilType, nitrogenVal, potassiumVal, phosphorousVal, fertilizer);
+    const farmer = await Farmer.findOne({ phoneNumber });
+    if (!farmer) {
+      console.log("Farmer not found");
+      res.status(404).json({ recommendations: null });
+      return;
+    }
 
-      const requestBody = {
-        Temparature: temperature,
-        Humidity: humidity,
-        Moisture: moisture, // If you have this, replace 0
-        Soil_Type: soilType,
-        Nitrogen: nitrogenVal,
-        Potassium: potassiumVal,
-        Phosphorous: phosphorousVal,
-        Fertilizer_Name: fertilizer
+    const { town, district, state } = farmer;
+    const { nitrogenVal, potassiumVal, phosphorousVal } = await getNPKValues(town, district, state);
+    // const weather = await getWeatherByLocation1(town);
+    // const { temperature, humidity } = weather;
+
+    const temperature =27; const humidity = 20;
+
+    const soilType = "Clayey";
+    const moisture = 0;
+
+    const requestBody = {
+      Temparature: temperature,
+      Humidity: humidity,
+      Moisture: moisture,
+      Soil_Type: soilType,
+      Nitrogen: nitrogenVal,
+      Potassium: potassiumVal,
+      Phosphorous: phosphorousVal,
+    };
+
+    const response = await axios.post(`${process.env.CROP_FERTILIZER_URL}/predict-crop-fertilizer`, requestBody);
+    const cropRecommendations = response.data.recommendations;
+
+    const cropPredictedPrices = [];
+    const futureDate = new Date(new Date().setMonth(new Date().getMonth() + 6)).toISOString().split('T')[0];
+
+    for (const cropObj of cropRecommendations) {
+      const requestBody2 = {
+        item_name: cropObj.crop,
+        date: futureDate,
       };
-  
-      const response = await axios.post("https://da32-14-195-89-114.ngrok-free.app/predict-crop", requestBody);
-  
-      const recommendations = response.data; // This will be a string crop name
-      console.log(recommendations);
-      res.json({recommendations});
 
+      const response2 = await axios.post(`${process.env.CROP_PRICE_URL}/predict-price`, requestBody2);
+      //console.log("are "+response2.data.predicted_price);
+
+      cropPredictedPrices.push({
+        crop: cropObj.crop,
+        price: response2.data.predicted_price,
+        fertilizer: cropObj.fertilizer,
+        intervalDays: cropObj.fertilise_once_in_days,
+      });
+
+      //console.log("pp+"+cropPredictedPrices.price);
     }
-    catch(err){
-      res.status(500).json({error: err});
-    }
+
+    // 🗣️ Convert to a human-friendly string for TTS or display
+    const responseText = cropPredictedPrices.map((rec, index) => {
+      return `${index + 1}. ${rec.crop}: Predicted market price is ₹${rec.price} in 6 months. Use ${rec.fertilizer} every ${rec.intervalDays} days.`;
+    }).join(' ');
+
+    res.json({ message: responseText });
+
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: err.message });
+  }
 });
+
 
 router.post("/getIrrigation", async (req, res) => {
   try {
@@ -107,8 +189,8 @@ router.post("/getIrrigation", async (req, res) => {
 
     const { _id, town, landArea} = farmer;
     console.log(_id, town);
-    const {rain,Eto} = await getWeatherByLocation2(town);
-    //const rain = 20; const Eto = 2;
+    //const {rain,Eto} = await getWeatherByLocation2(town);
+    const rain = 20; const Eto = 2;
 
     const farmerCrop = await FarmerCrop.find({ farmerId: _id });
     const irrigationResults = [];
@@ -122,12 +204,29 @@ router.post("/getIrrigation", async (req, res) => {
       const irrigationQty = await getIrrigation(crop,sownDate,landArea,rain,Eto);
       irrigationResults.push({crop,irrigationQty});
     }
-    res.json({irrigationResults});
+    res.json({irrigationResultsString: formatIrrigationResults(irrigationResults,rain)});
 
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
+function formatIrrigationResults(results,rainfall) {
+  if (!results || results.length === 0) {
+    return "No irrigation recommendations are available at the moment.";
+  }
+
+  let response = `Since there will be ${rainfall} millimeters of rain today, Here are your irrigation recommendations: `;
+  
+  results.forEach((item, index) => {
+    const qty = Number(item.irrigationQty).toFixed(1); // round to 1 decimal place
+    const cropName = item.crop.charAt(0).toUpperCase() + item.crop.slice(1);
+    response += `${index === 0 ? "" : " Next, "}for ${cropName}, apply approximately ${qty} liters of water per acre. `;
+  });
+
+  return response.trim();
+}
+
 
 router.post("/farmer/addCrop", async (req, res) => {
     const { phoneNumber, cropName } = req.body;
