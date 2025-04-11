@@ -5,8 +5,11 @@ const Login = lazy(() => import('./pages/Login'));
 const SignUp = lazy(() => import('./pages/SignUp'));
 const Learn = lazy(() => import('./pages/Learn'));
 const CustomerDashboard = lazy(() => import('./pages/CustomerDashboard'));
-const FarmerDashboard = lazy(() => import('./pages/FarmerDashboard'));
 const About = lazy(() => import('./pages/About'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Planner = lazy(() => import('./pages/Planner'));
+const Crops = lazy(() => import('./pages/Crops'));
+const Market = lazy(() => import('./pages/Market'));
 function App() {
   return (
     <Router>
@@ -18,8 +21,12 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/learn" element={<Learn />} />
           <Route path="/customerdashboard" element={<CustomerDashboard />} />
-          <Route path="/farmerdashboard" element={<FarmerDashboard />} />
           <Route path="/about" element={<About />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/planner" element={<Planner />} />
+          <Route path="/crops" element={<Crops />} />
+          <Route path="/market" element={<Market />} />
+          {/* Add more routes as needed */}
         </Routes>
       </Suspense>
     </Router>
