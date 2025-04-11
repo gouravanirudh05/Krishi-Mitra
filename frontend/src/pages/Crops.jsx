@@ -25,7 +25,7 @@ export default function Crops() {
                         </div>
                     </section>
 
-                    <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <ChartCard
                             title="Rain shower prediction"
                             footer={
@@ -75,7 +75,7 @@ export default function Crops() {
                         >
                             [Grouped Bar Chart]
                         </ChartCard>
-                    </section>
+                    </section> */}
 
                     <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div className="bg-white rounded-xl shadow p-4">

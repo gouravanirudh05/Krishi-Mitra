@@ -39,21 +39,22 @@ export default function Dashboard() {
 
         <main className="flex-1 p-8 space-y-8">
           {/* Cards */}
+          <p className="text-xl font-semibold text-gray-800 mb-2">Your Crops</p>
           <section className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
-            {crops.map((crop) => (
+          {crops
+            .filter(crop => crop.cropName && crop.cropName.trim() !== "")
+            .map((crop) => (
               <CropCard
                 key={crop._id}
-                id={crop._id}
+                id={crop.cropName}
                 emoji="🌾"
                 name={crop.cropName}
                 color="#ffffff"
-                sales={`1000 kg`}
+                // sales={`1000 kg`}
+                fertilizer={crop.fertilizer}
                 growth="+8% from yesterday"
               />
-            ))}
-            <div className="flex justify-center items-center bg-white rounded-xl shadow text-4xl text-gray-400">
-              +
-            </div>
+          ))}
           </section>
 
           {/* Charts */}
