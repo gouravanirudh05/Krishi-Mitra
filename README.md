@@ -2,27 +2,22 @@
 <br />
 <div align="center">
   <a href="https://github.com/FantomCode25/GG_Coders">
-    <img src="frontend/src/assets/logo.png" alt="Logo" width="80" height="80">
+    <img src="frontend/src/assets/logo.png" alt="Logo" width="100" height="100">
   </a>
 
-  <h3 align="center">Best-README-Template</h3>
+  <h3 align="center">KrishiMitra</h3>
 
   <p align="center">
-    An awesome README template to jumpstart your projects!
+    Just a great tool to empower farmers
     <br />
-    <a href="https://github.com/FantomCode25/GG_Coders"><strong>Explore the docs »</strong></a>
+    <strong>GG_Coders</strong>
     <br />
+    <strong>FantomCode2025 4th edition</strong>
     <br />
-    <a href="https://github.com/FantomCode25/GG_Coders">View Demo</a>
+    <strong>11/04/2025</strong>
     &middot;
   </p>
 </div>
-
-# KrishiMitra
-
-**Team Name:** _GG_Coders_  
-**Hackathon:** _FantomCode2025 4th edition_  
-**Date:** _11/04/2025_
 
 ---
 
