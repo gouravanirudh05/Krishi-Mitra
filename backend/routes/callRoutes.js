@@ -332,6 +332,8 @@ router.post("/farmer/addCrop", async (req, res) => {
       {
         tips+=tip+"\n";
       }
+      farmer.farmingTips = tips;
+      await farmer.save();
       res.json({tips: tips});
   
     } catch (err) {

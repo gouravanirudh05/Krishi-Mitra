@@ -193,7 +193,7 @@ router.get("/farmer/getCrops", farmerAuthMiddleware, async (req, res) => {
         //     cost: fc.cost
         // }));
 
-        res.json({ success: true, farmerCrops });
+        res.json({ success: true, farmerCrops});
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: "Server error" });
