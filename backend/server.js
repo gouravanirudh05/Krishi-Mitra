@@ -4,8 +4,6 @@ import cors from "cors";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import Farmer from "./models/farmerModel.js";
-import getLocationHierarchy from "./gemini.js";
 import marketPlaceRoutes from "./routes/marketPlaceRoutes.js"
 import callRoutes from "./routes/callRoutes.js"
 
