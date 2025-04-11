@@ -10,6 +10,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import axios from "axios";
 import dotenv from 'dotenv';
+import Market from '../models/marketModel.js';
 
 dotenv.config();
 
@@ -223,6 +224,25 @@ router.post("/farmer/getCrop", farmerAuthMiddleware, async (req, res) => {
       res.status(500).json({ success: false, message: "Server error" });
   }
 });
+
+router.post("/farmer/uploadCrop", farmerAuthMiddleware, async (req, res) => {
+    try {
+        const {cropName, cropQuantity, cropPrice} = req.body;
+        const farmer = await Farmer.findById(req.farmer.id);
+  
+        if (!farmer) {
+            return res.status(404).json({ success: false, message: "Farmer does not exist." });
+        }
+  
+        const market = new Market({farmerId: req.farmer.id, cropName, cropQuantity, cropPrice});
+        await market.save();
+  
+        res.json({ success: true, message: "You have uploaded the crop successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+  });
 
 router.get("/customer/getCrops", async (req, res) => {
     try {

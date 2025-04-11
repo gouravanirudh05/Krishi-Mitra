@@ -24,8 +24,8 @@ export default function CropDetails() {
                 headers: {
                   Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
                   "Content-Type": "application/json",
-                  body: JSON.stringify({ cropName: cropId }),
                 },
+                body: JSON.stringify({ cropName: cropId }),
               }
             );
             const cropJson = await cropRes.json();
@@ -50,7 +50,7 @@ export default function CropDetails() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    cropId,
+                    cropName: cropId,
                     cropQuantity: quantity,
                     cropPrice: price,
                 }),

@@ -36,6 +36,7 @@ export default function Dashboard() {
           }
         );
         const cropsJson = await cropsRes.json();
+        console.log(cropsJson);
         setCrops(cropsJson.farmerCrops || []);
 
         // Fetch farmer info
