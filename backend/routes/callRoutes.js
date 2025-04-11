@@ -5,7 +5,7 @@ import FarmerCrop from "../models/farmerCropsModel.js";
 import Crop from '../models/cropModel.js';
 import axios from "axios";
 import mongoose from "mongoose";
-import {getLocationHierarchy,getCropGrowthStage} from "../models/gemini.js";
+import {getLocationHierarchy,getCropGrowthStage,getFarmingTips} from "../models/gemini.js";
 import Kc from "../models/KcModel.js";
 
 const router = Router();
@@ -182,6 +182,45 @@ router.post("/farmer/addCrop", async (req, res) => {
     // }, { jobId: uniqueJobName });
   
     // res.json({ success: true });
+  });
+
+  router.post("/getFarmingTips", async (req, res) => {
+    try {
+      const { phoneNumber } = req.body;
+  
+      const farmer = await Farmer.findOne({ phoneNumber });
+      if (!farmer) {
+        console.log("Farmer not found");
+        return res.status(404).json({ recommendations: null });
+      }
+  
+      const { _id, district, landArea } = farmer;
+  
+      // Get all FarmerCrop documents for the farmer
+      const farmerCrops = await FarmerCrop.find({ farmerId: _id });
+  
+      // Extract unique crop names and fertilizers from each crop entry
+      const crops = farmerCrops.map(fc => fc.cropName);
+      const fertilizers = farmerCrops.flatMap(fc => fc.fertilizers || []); // assuming each crop can have a `fertilizers` array
+  
+      const farmingTips = await getFarmingTips({
+        district,
+        area: landArea,
+        crops,
+        fertilizers
+      });
+  
+      var tips ="";
+      for(const tip of farmingTips.tips)
+      {
+        tips+=tip+"\n";
+      }
+      res.json({tips: tips});
+  
+    } catch (err) {
+      console.error("Error in getFarmingTips:", err);
+      res.status(500).json({ error: err.message });
+    }
   });
 
 async function getNPKValues(town,district,state){
