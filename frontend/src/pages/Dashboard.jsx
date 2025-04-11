@@ -3,6 +3,7 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import CropCard from "../components/CropCard";
 import ChartCard from "../components/ChartCard";
+import DisplayField from "../components/DisplayField";
 
 const BACKEND_URL =
   import.meta.env.VITE_APP_BACKEND_URL ?? "http://localhost:5000";
@@ -62,7 +63,7 @@ export default function Dashboard() {
       } catch (err) {
         console.error("Error loading dashboard data", err);
       }
-    fetchCrops();
+      fetchCrops();
     }
   }, []);
 
@@ -76,21 +77,20 @@ export default function Dashboard() {
 
         <main className="flex-1 p-8 space-y-8">
           {/* Crop Cards */}
-          <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl shadow p-4">
-              <h4 className="font-semibold mb-2">Farmer Information</h4>
-              <div className="text-sm text-gray-700 space-y-1 px-1">
-                <p><span className="font-medium">Name:</span> {farmerInfo.name}</p>
-                <p><span className="font-medium">Phone Number:</span> {farmerInfo.phoneNumber}</p>
-                <p><span className="font-medium">District:</span> {farmerInfo.district}</p>
-                <p><span className="font-medium">Town:</span> {farmerInfo.town}</p>
-                <p><span className="font-medium">Block:</span> {farmerInfo.block}</p>
-                <p><span className="font-medium">State:</span> {farmerInfo.state}</p>
-                <p><span className="font-medium">Land Area:</span> {farmerInfo.landArea} acres</p>
+          <section className="w-3/4 mx-auto">
+            <div className="bg-white rounded-2xl shadow p-6">
+              <h2 className="text-xl font-semibold text-center mb-6">Farmer Information</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <DisplayField label="Name" value={farmerInfo.name} />
+                <DisplayField label="Phone Number" value={farmerInfo.phoneNumber} />
+                <DisplayField label="District" value={farmerInfo.district} />
+                <DisplayField label="Town" value={farmerInfo.town} />
+                <DisplayField label="Block" value={farmerInfo.block} />
+                <DisplayField label="State" value={farmerInfo.state} />
+                <DisplayField label="Land Area (acres)" value={farmerInfo.landArea} />
               </div>
             </div>
-          </section>  
-
+          </section>
 
           <p className="text-xl font-semibold text-gray-800 mb-2">Your Crops</p>
           <section className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
