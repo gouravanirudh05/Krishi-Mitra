@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import { useParams } from "react-router-dom";
@@ -12,6 +12,34 @@ export default function CropDetails() {
 
     const [quantity, setQuantity] = useState("");
     const [price, setPrice] = useState("");
+
+    useEffect(() => {
+        async function fetchCropDetails() {
+          try {
+            // Fetch crops
+            const cropRes = await fetch(
+              `${BACKEND_URL}/api/marketPlace/farmer/getCrop`,
+              {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+                  "Content-Type": "application/json",
+                  body: JSON.stringify({ cropName: cropId }),
+                },
+              }
+            );
+            const cropJson = await cropRes.json();
+            // setCrops(cropJson.farmerCrops || []);
+    
+
+            console.log(cropJson);
+          } catch (err) {
+            console.error("Error loading dashboard data", err);
+          }
+        }
+        fetchCropDetails();
+      }, []);
+    
 
     const handleUpload = async () => {
         try {

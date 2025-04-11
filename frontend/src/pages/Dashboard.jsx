@@ -51,20 +51,21 @@ export default function Dashboard() {
         );
         const farmerJson = await farmerRes.json();
         setFarmerInfo({
-          name: farmerJson.name,
-          phoneNumber: farmerJson.phoneNumber,
-          district: farmerJson.district,
-          state: farmerJson.state,
-          town: farmerJson.town,
-          block: farmerJson.block,
-          landArea: farmerJson.landArea,
-          farmingTips: farmerJson.farmingTips,
+          name: farmerJson.farmer.name,
+          phoneNumber: farmerJson.farmer.phoneNumber,
+          district: farmerJson.farmer.district,
+          state: farmerJson.farmer.state,
+          town: farmerJson.farmer.town,
+          block: farmerJson.farmer.block,
+          landArea: farmerJson.farmer.landArea,
+          farmingTips: farmerJson.farmer.farmingTips,
         });
+        console.log(farmerJson);
       } catch (err) {
         console.error("Error loading dashboard data", err);
       }
-      fetchCrops();
     }
+    fetchDashboardData();
   }, []);
 
 
@@ -109,6 +110,16 @@ export default function Dashboard() {
               ))}
           </section>
 
+          {/* Farming Tips */}
+          <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-white rounded-xl shadow p-4">
+              <h4 className="font-semibold mb-2">Farming Tips</h4>
+              <div className="h-40 overflow-y-auto text-sm text-gray-700 whitespace-pre-line px-1">
+                {farmerInfo.farmingTips || "No tips available."}
+              </div>
+            </div>
+          </section>              
+
           {/* Charts */}
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <ChartCard title="Rain shower prediction">[Chart]</ChartCard>
@@ -126,15 +137,6 @@ export default function Dashboard() {
             </ChartCard>
           </section>
 
-          {/* Farming Tips */}
-          <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl shadow p-4">
-              <h4 className="font-semibold mb-2">Farming Tips</h4>
-              <div className="h-40 overflow-y-auto text-sm text-gray-700 whitespace-pre-line px-1">
-                {farmerInfo.farmingTips || "No tips available."}
-              </div>
-            </div>
-          </section>
         </main>
       </div>
     </div>

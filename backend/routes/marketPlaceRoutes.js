@@ -200,6 +200,30 @@ router.get("/farmer/getCrops", farmerAuthMiddleware, async (req, res) => {
     }
 });
 
+router.post("/farmer/getCrop", farmerAuthMiddleware, async (req, res) => {
+  try {
+    console.log(req.body);
+      const farmer = await Farmer.findById(req.farmer.id);
+
+      if (!farmer) {
+          return res.status(404).json({ success: false, message: "Farmer does not exist." });
+      }
+
+      const farmerCrops = await FarmerCrop.findOne({ farmerId: req.farmer.id, cropName: req.body.cropName});
+
+      // const crops = farmerCrops.map(fc => ({
+      //     crop: fc.cropId,      // This contains the populated Crop object
+      //     date: fc.date,One
+      //     cost: fc.cost
+      // }));
+
+      res.json({ success: true, farmerCrops});
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
 router.get("/customer/getCrops", async (req, res) => {
     try {
         const allFarmerCrops = await FarmerCrop.find()
@@ -222,7 +246,7 @@ router.get("/customer/getCrops", async (req, res) => {
 
 router.get("/farmer/getProfile", farmerAuthMiddleware, async (req, res) => {
     try {
-        const farmer = Farmer.findById(req.farmer.id);
+        const farmer = await Farmer.findById(req.farmer.id);
         res.json({farmer, sucess: true});
     } catch (error) {
         console.error(error.message);
