@@ -9,7 +9,6 @@ const Learn = lazy(() => import('./pages/Learn'));
 const Marketplace = lazy(() => import('./pages/Marketplace'));
 const About = lazy(() => import('./pages/About'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
-const Planner = lazy(() => import('./pages/Planner'));
 const Crops = lazy(() => import('./pages/Crops'));
 const CropDetails = lazy(() => import('./pages/CropDetails'));
 const Market = lazy(() => import('./pages/Market'));
@@ -26,7 +25,6 @@ function App() {
           <Route path="/marketplace" element={<Marketplace />} />
           <Route path="/about" element={<About />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/planner" element={<Planner />} />
           <Route path="/crops" element={<Crops />} />
           <Route path="/market" element={<Market />} />
           <Route path="/crops/:cropId" element={<CropDetails />} />

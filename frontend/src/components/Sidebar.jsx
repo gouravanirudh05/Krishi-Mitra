@@ -3,7 +3,6 @@ import { NavLink } from "react-router-dom";
 export default function Sidebar({ activePage, customNav }) {
   const defaultNav = [
     { label: "Dashboard", path: "/dashboard" },
-    { label: "Planner", path: "/planner" },
     { label: "Crops", path: "/crops" },
     { label: "Market", path: "/market" },
   ];
