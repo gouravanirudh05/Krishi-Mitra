@@ -85,6 +85,7 @@ This solution brings accessibility, empowerment, and profitability directly into
 [![numpy][numpy]][numpy-url]
 [![pandas][pandas]][pandas-url]
 [![fastapi][fastapi]][fastapi-url]
+[![matplotlib][matplotlib]][matplotlib-url]
 
 ## 🧩 Architecture Diagram
 
@@ -267,6 +268,8 @@ One can learn more about this from the `/docs` page.
 [pandas-url]: https://pandas.pydata.org/
 [fastapi]: https://img.shields.io/badge/fastapi-109989?style=for-the-badge&logo=FASTAPI&logoColor=white
 [fastapi-url]: https://fastapi.tiangolo.com/
+[matplotlib]: https://img.shields.io/badge/Matplotlib-%23ffffff.svg?style=for-the-badge&logo=Matplotlib&logoColor=black
+[matplotlib-url]: https://matplotlib.org/
 [contributors-shield]: https://img.shields.io/github/contributors/FantomCode2025/GG_Coders?style=for-the-badge
 [contributors-url]: https://github.com/FantomCode2025/GG_Coders/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/FantomCode2025/GG_Coders.svg?style=for-the-badge
