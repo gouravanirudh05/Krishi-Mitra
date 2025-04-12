@@ -6,7 +6,7 @@ export default function CropCardCustomer({ id, cropName, emoji, color, cropPrice
     return (
         <div className="bg-white rounded-xl shadow p-4 flex flex-col gap-2 hover:scale-105 transition-transform duration-200 cursor-pointer" style={{ backgroundColor: "white" }}>
             <h4 className="font-bold text-lg">{cropName}</h4>
-            <h4 className="font-bold text-lg">{farmerId.name}</h4>
+            <h4 className="font text-lg">{farmerId.name}</h4>
             <p className="text-sm text-gray-500">Price: ₹{cropPrice} / kg</p>
 
             <div className="flex items-center gap-2 mt-2 stopPropagation">
