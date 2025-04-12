@@ -8,7 +8,7 @@ import dummySchedule from "../data/dummySchedule";
 
 export default function Crops() {
     return (
-        <div className="flex min-h-screen bg-[#f6fbf9] text-gray-800 font-poppins">
+        <div className="flex flex-col sm:flex-row min-h-screen bg-[#f6fbf9] text-gray-800 font-poppins">
             <Sidebar />
             <div className="flex-1 flex flex-col">
                 <Header title="Crops" />
