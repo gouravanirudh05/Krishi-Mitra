@@ -183,6 +183,8 @@ To share your API over the internet we will make use of ngrok, run the following
 ngork http 8000
 ```
 
+Additionally we provide metrics when the model is first trained in the `models/metrics` folder. These images will be of great help for those who want to know more about the acuracy and other metrics of their ml model.
+
 #### Steps to make API call to access ML model
 
 With the link obtained from `ngrok` use one can use the following `POST` request
