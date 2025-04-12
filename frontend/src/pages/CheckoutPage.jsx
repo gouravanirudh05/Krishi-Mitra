@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 
+const BACKEND_URL =
+  import.meta.env.VITE_APP_BACKEND_URL ?? "http://localhost:5000";
+
 export default function CheckOutPage() {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
@@ -12,6 +15,7 @@ export default function CheckOutPage() {
     console.log("Stored cart from localStorage:", storedCart);
     if (storedCart) {
       setCartItems(JSON.parse(storedCart));
+      console.log(JSON.parse(storedCart));
     }
   }, []);
 
@@ -19,6 +23,30 @@ export default function CheckOutPage() {
     (sum, item) => sum + item.cropQuantity * item.cropPrice,
     0
   );
+
+  const handleCheckout = async () => {
+    try {
+      // Fetch crops
+      const marketRes = await fetch(
+        `${BACKEND_URL}/api/marketPlace/customer/purchase`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cartItems })
+        }
+      );
+      const marketJson = await marketRes.json();
+      console.log(marketJson);
+      if(marketJson.success)
+        alert(marketJson.message);
+      else
+        alert(marketJson.message);
+    } catch (err) {
+      console.error("Error loading dashboard data", err);
+    }
+  }
 
   return (
     <div className="flex min-h-screen bg-[#f6fbf9] text-gray-800 font-poppins">
@@ -78,6 +106,12 @@ export default function CheckOutPage() {
                   className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                 >
                   Print Bill
+                </button>
+                <button
+                  onClick={handleCheckout}
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                >
+                  Checkout
                 </button>
               </div>
             </div>

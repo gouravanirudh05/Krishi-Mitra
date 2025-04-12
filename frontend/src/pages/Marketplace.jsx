@@ -69,6 +69,7 @@ export default function Marketplace() {
     if (index === -1) {
       existingCart.push({
         id: cropId,
+        farmerId: crop.farmerId,
         cropName: crop.cropName,
         cropPrice: crop.cropPrice,
         cropQuantity: 1,

@@ -5,6 +5,8 @@ import Farmer from '../models/farmerModel.js';
 import Crop from '../models/cropModel.js';
 import FarmerCrop from '../models/farmerCropsModel.js';
 import farmerAuthMiddleware from '../middlewares/farmerAuthMiddleware.js';
+import customerAuthMiddleware from '../middlewares/customerAuthMiddleware.js';
+import mongoose from "mongoose";
 import NPK from "../models/NPKModel.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -256,6 +258,56 @@ router.post("/farmer/uploadCrop", farmerAuthMiddleware, async (req, res) => {
     }
   });
 
+  router.post("/customer/purchase", async (req, res) => {
+    try {
+      const { cartItems } = req.body;
+  
+      if (!Array.isArray(cartItems) || cartItems.length === 0) {
+        return res.status(400).json({ success: false, message: "Cart is empty or invalid format" });
+      }
+  
+      const updatedCrops = [];
+  
+      for (const item of cartItems) {
+        const { id, cropName, cropQuantity, farmerId } = item;
+  
+        if (!id || !cropName || !cropQuantity) {
+          return res.status(400).json({ success: false, message: "Missing required fields in cart item" });
+        }
+  
+        const market = await Market.findOne({
+          farmerId: new mongoose.Types.ObjectId(farmerId._id),
+          cropName,
+        });
+  
+        if (!market) {
+          return res.status(404).json({ success: false, message: `Crop ${cropName} not found` });
+        }
+  
+        if (market.cropQuantity < cropQuantity) {
+          return res.status(400).json({ success: false, message: `Insufficient quantity for ${cropName}` });
+        }
+  
+        market.cropQuantity -= cropQuantity;
+        await market.save();
+  
+        updatedCrops.push({
+          cropName: market.cropName,
+          remainingQuantity: market.cropQuantity,
+        });
+      }
+  
+      res.status(200).json({
+        success: true,
+        message: "All purchases successful",
+        updatedCrops,
+      });
+    } catch (error) {
+      console.error("Purchase error:", error.message);
+      res.status(500).json({ success: false, message: "Server error during purchase" });
+    }
+  });
+  
 
   router.get("/farmer/getMarket", farmerAuthMiddleware, async (req, res) => {
     try {
