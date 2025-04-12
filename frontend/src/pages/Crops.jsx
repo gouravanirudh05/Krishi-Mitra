@@ -7,9 +7,36 @@ import AddCropModal from "../components/AddCropModal";
 import dummyCrops from "../data/dummyCrops";
 import dummySchedule from "../data/dummySchedule";
 
+import { useEffect } from "react";
+const BACKEND_URL =
+  import.meta.env.VITE_APP_BACKEND_URL ?? "http://localhost:5000";
+
+
 export default function Crops() {
-    const [crops, setCrops] = useState(dummyCrops);
+    const [crops, setCrops] = useState([]);
     const [showModal, setShowModal] = useState(false);
+
+    useEffect(() => {
+        async function fetchCrops() {
+          try {
+            const res = await fetch(`${BACKEND_URL}/api/marketPlace/farmer/getCrops`, {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+                "Content-Type": "application/json",
+              },
+            });
+      
+            const data = await res.json();
+            setCrops(data.farmerCrops || []);
+          } catch (err) {
+            console.error("Failed to fetch farmer crops", err);
+          }
+        }
+      
+        fetchCrops();
+      }, []);
+      
 
     const handleAddCrop = (cropName) => {
         setCrops((prev) => [
@@ -34,9 +61,24 @@ export default function Crops() {
                 <main className="flex-1 p-8 space-y-8">
                     <section>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-                            {crops.map((crop) => (
-                                <CropCard key={crop.id} {...crop} />
+                        {Array.from(
+                            new Map(
+                                crops
+                                .filter((crop) => crop.cropName && crop.cropName.trim() !== "")
+                                .map((crop) => [crop.cropName, crop])
+                            ).values()
+                            ).map((crop) => (
+                            <CropCard
+                                key={crop._id}
+                                id={crop.cropName}
+                                emoji="🌱"
+                                name={crop.cropName}
+                                color="#ffffff"
+                                text1={`${crop.fertilizer || "No fertilizer info"} used`}
+                                text2={`Sown on ${new Date(crop.date).toLocaleDateString()}`}
+                            />
                             ))}
+
 
                             <div
                                 className="flex justify-center items-center bg-gray-100 text-4xl rounded-xl shadow cursor-pointer hover:bg-gray-200 transition"

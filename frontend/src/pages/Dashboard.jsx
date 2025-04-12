@@ -166,7 +166,7 @@ export default function Dashboard() {
 
 
           {/* Farming Tips */}
-          <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <section className="flex flex-col gap-6 w-full">
             <div className="bg-white rounded-xl shadow p-4">
               <h4 className="font-semibold mb-2 text-lg">🌱 Farming Tips</h4>
               <div className="h-40 overflow-y-auto text-sm text-gray-700 px-1 space-y-3">

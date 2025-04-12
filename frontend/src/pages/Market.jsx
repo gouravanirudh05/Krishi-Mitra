@@ -76,7 +76,7 @@ export default function MarketDashboard() {
                             {farmerCrops.map((crop) => (
                                 <CropCard
                                     key={crop._id}
-                                    id={crop._id}
+                                    id={crop.   cropName}
                                     name={crop.cropName}
                                     emoji="🌾"
                                     color="#d1fae5"

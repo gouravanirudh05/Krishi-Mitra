@@ -265,7 +265,7 @@ router.post("/farmer/addCrop", async (req, res) => {
           };
       
           try {
-            const response = await axios.post("https://e769-14-195-89-114.ngrok-free.app/recommend-fertilizer", requestBody);
+            const response = await axios.post("https://f57e-14-195-89-114.ngrok-free.app/recommend-fertilizer", requestBody);
             const json = response.data;
             const farmerCrop = new FarmerCrop({farmerId: farmer._id, cropId: kc._id, cropName: kc.Crop, date: new Date(), fertilizer: json.recommended_fertilizer, fertilizerPeriod: json.fertilise_once_in_days});
             await farmerCrop.save();
