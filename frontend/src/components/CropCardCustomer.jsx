@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 
-export default function CropCardCustomer({ id, cropName, emoji, color, cropPrice, cropQuantity, farmerId }) {
+export default function CropCardCustomer({ id, cropName, emoji, color, cropPrice, cropQuantity, farmerId, onIncrement, onDecrement }) {
     const [quantity, setQuantity] = useState(0);
 
     return (
-        <div className="bg-white rounded-xl shadow p-4 flex flex-col gap-2 hover:scale-105 transition-transform duration-200 cursor-pointer" style={{ backgroundColor: color }}>
-            <div className="text-3xl">{emoji}</div>
+        <div className="bg-white rounded-xl shadow p-4 flex flex-col gap-2 hover:scale-105 transition-transform duration-200 cursor-pointer" style={{ backgroundColor: "white" }}>
             <h4 className="font-bold text-lg">{cropName}</h4>
             <h4 className="font-bold text-lg">{farmerId.name}</h4>
             <p className="text-sm text-gray-500">Price: ₹{cropPrice} / kg</p>
@@ -17,6 +16,7 @@ export default function CropCardCustomer({ id, cropName, emoji, color, cropPrice
                         e.stopPropagation();
                         e.preventDefault();
                         setQuantity((prev) => Math.max(0, prev - 1));
+                        onDecrement(id);
                     }}
                 >-</button>
                 <span>{quantity}</span>
@@ -26,6 +26,7 @@ export default function CropCardCustomer({ id, cropName, emoji, color, cropPrice
                         e.stopPropagation();
                         e.preventDefault();
                         setQuantity((prev) => Math.min(cropQuantity, prev + 1));
+                        onIncrement(id);
                     }}
                 >+</button>
             </div>

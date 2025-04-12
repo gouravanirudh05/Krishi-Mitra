@@ -35,9 +35,34 @@ export default function Marketplace() {
     fetchMarket();
   }, []);
 
-  const handleAddToCart = (crop) => {
+  const addToCart = (cropId) => {
     const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-    const cropId = crop._id;
+    const crop = crops.find((crop) => crop._id === cropId);
+
+    const index = existingCart.findIndex((item) => item.id === cropId);
+
+    if (index === -1) {
+      existingCart.push({
+        id: cropId,
+        cropName: crop.cropName,
+        cropPrice: crop.cropPrice,
+        cropQuantity: 1,
+      });
+    } else {
+      existingCart[index].cropQuantity += 1;
+    }
+
+    localStorage.setItem("cartItems", JSON.stringify(existingCart));
+    console.log("Cart after adding:", existingCart);
+
+    setSelectedCrop(crop);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 2000);
+  };
+
+  const removeFromCart = (cropId) => {
+    const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    const crop = crops.find((crop) => crop._id === cropId);
 
     const index = existingCart.findIndex((item) => item.id === cropId);
 
@@ -75,9 +100,17 @@ export default function Marketplace() {
 
           <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
             {crops.map((crop) => (
-              <div key={crop._id} onClick={() => handleAddToCart(crop)}>
-                <CropCardCustomer {...crop} />
-              </div>
+              <CropCardCustomer
+                key={crop._id}
+                id={crop._id}
+                cropName={crop.name}
+                cropPrice={crop.price}
+                cropQuantity={crop.availableQuantity}
+                farmerId={crop.farmer}
+                onIncrement={() => addToCart(crop._id)}
+                onDecrement={() => removeFromCart(crop._id)}
+              />
+
             ))}
           </section>
         </main>

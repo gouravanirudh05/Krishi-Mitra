@@ -2,8 +2,49 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import CropCard from "../components/CropCard";
-import ChartCard from "../components/ChartCard";
 import DisplayField from "../components/DisplayField";
+import ChartCard from "../components/ChartCard";
+import LineChartComponent from "../components/LineChartComponent";
+import BarChartComponent from "../components/BarChartComponent";
+
+export const rainShowerData = [
+  { day: "Mon", predicted: 10, actual: 12 },
+  { day: "Tue", predicted: 15, actual: 14 },
+  { day: "Wed", predicted: 8, actual: 10 },
+  { day: "Thu", predicted: 12, actual: 13 },
+  { day: "Fri", predicted: 20, actual: 18 },
+];
+
+export const irrigationScheduleData = [
+  { day: "Mon", used: 50, recommended: 60 },
+  { day: "Tue", used: 65, recommended: 70 },
+  { day: "Wed", used: 55, recommended: 60 },
+  { day: "Thu", used: 60, recommended: 65 },
+  { day: "Fri", used: 70, recommended: 75 },
+];
+
+export const timeToHarvestData = [
+  { week: "Week 1", progress: 10 },
+  { week: "Week 2", progress: 30 },
+  { week: "Week 3", progress: 55 },
+  { week: "Week 4", progress: 75 },
+  { week: "Week 5", progress: 100 },
+];
+
+export const expectedHarvestData = [
+  { crop: "Wheat", expected: 3000, target: 3500 },
+  { crop: "Rice", expected: 2500, target: 2700 },
+  { crop: "Maize", expected: 2800, target: 3000 },
+];
+
+export const scheduleTableData = [
+  { name: "Urea", usage: 70, color: "bg-green-500" },
+  { name: "DAP", usage: 55, color: "bg-blue-500" },
+  { name: "Potash", usage: 35, color: "bg-yellow-500" },
+  { name: "Pesticide A", usage: 60, color: "bg-red-500" },
+];
+
+
 
 const BACKEND_URL =
   import.meta.env.VITE_APP_BACKEND_URL ?? "http://localhost:5000";
@@ -119,22 +160,53 @@ export default function Dashboard() {
                 {farmerInfo.farmingTips || "No tips available."}
               </div>
             </div>
-          </section>              
+          </section>
 
           {/* Charts */}
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <ChartCard title="Rain shower prediction">[Chart]</ChartCard>
-            <ChartCard title="Irrigation Schedule">[Bar Chart]</ChartCard>
-            <ChartCard title="Time to harvest">[Line Chart]</ChartCard>
+            <ChartCard title="Rain shower prediction">
+              <LineChartComponent
+                data={rainShowerData}
+                lines={[
+                  { dataKey: "predicted", color: "#3b82f6" }, // blue
+                  { dataKey: "actual", color: "#ef4444" },    // red
+                ]}
+              />
+            </ChartCard>
+
+            <ChartCard title="Irrigation Schedule">
+              <BarChartComponent
+                data={irrigationScheduleData}
+                dataKey="used"
+                xKey="day"
+                color="#3b82f6"
+              />
+            </ChartCard>
+            <ChartCard title="Time to harvest">
+              <LineChartComponent
+                data={timeToHarvestData}
+                lines={[{ dataKey: "progress", color: "#3b82f6" }]}
+              />
+            </ChartCard>
           </section>
 
           {/* Bottom Charts */}
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <ChartCard title="Expected Harvest" height="h-40">
-              [Bar Graph]
+              <BarChartComponent
+                data={expectedHarvestData}
+                dataKey="expected"
+                xKey="crop"
+                color="#3b82f6"
+              />
             </ChartCard>
             <ChartCard title="Pesticide / Fertilizer Schedule" height="h-40">
-              <div className="text-sm text-gray-500">[Table with bars]</div>
+              <BarChartComponent
+                data={scheduleTableData}
+                dataKey="usage"
+                xKey="name"
+                color="#3b82f6"
+              />
             </ChartCard>
           </section>
 
