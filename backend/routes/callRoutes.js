@@ -124,13 +124,13 @@ router.post("/getRecommendations", async (req, res) => {
 
     const { town, district, state } = farmer;
     const { nitrogenVal, potassiumVal, phosphorousVal } = await getNPKValues(town, district, state);
-    // const weather = await getWeatherByLocation1(town);
-    // const { temperature, humidity } = weather;
+    const weather = await getWeatherByLocation1(town);
+    const { temperature, humidity } = weather;
 
-    const temperature =27; const humidity = 20;
+    // const temperature =27; const humidity = 20;
 
-    const soilType = "Clayey";
-    const moisture = 0;
+    const soilType = "Moisture";
+    const moisture = 0.5;
 
     const requestBody = {
       Temparature: temperature,
@@ -142,31 +142,23 @@ router.post("/getRecommendations", async (req, res) => {
       Phosphorous: phosphorousVal,
     };
 
-    const response = await axios.post(`${process.env.CROP_FERTILIZER_URL}/predict-crop-fertilizer`, requestBody);
+    const response = await axios.post(`${process.env.CROP_FERTILIZER_URL}/predict-top-crops-by-price`, requestBody);
     console.log(response.data);
-    const cropRecommendations = response.data.recommendations;
+    const cropRecommendations = response.data[`top-crops-by-price`];
 
     const cropPredictedPrices = [];
-    const futureDate = new Date(new Date().setMonth(new Date().getMonth() + 6)).toISOString().split('T')[0];
 
     for (const cropObj of cropRecommendations) {
-      const requestBody2 = {
-        item_name: cropObj.crop,
-        date: futureDate,
-      };
-
-      const response2 = await axios.post(`${process.env.CROP_PRICE_URL}/predict-price`, requestBody2);
-      console.log("are "+response2.data);
-
       cropPredictedPrices.push({
         crop: cropObj.crop,
-        price: response2.data.predicted_price,
         fertilizer: cropObj.fertilizer,
         intervalDays: cropObj.fertilise_once_in_days,
+        cropPredictedPrice: cropObj.predicted_price
       });
 
       //console.log("pp+"+cropPredictedPrices.price);
     }
+    console.log(cropPredictedPrices);
 
     // 🗣️ Convert to a human-friendly string for TTS or display
     const responseText = cropPredictedPrices.map((rec, index) => {
@@ -196,8 +188,8 @@ router.post("/getIrrigation", async (req, res) => {
 
     const { _id, town, landArea} = farmer;
     console.log(_id, town);
-    //const {rain,Eto} = await getWeatherByLocation2(town);
-    const rain = 20; const Eto = 2;
+    const {rain,Eto} = await getWeatherByLocation2(town);
+    //const rain = 20; const Eto = 2;
 
     const farmerCrop = await FarmerCrop.find({ farmerId: _id });
     const irrigationResults = [];
@@ -251,8 +243,10 @@ router.post("/farmer/addCrop", async (req, res) => {
 
     const {nitrogenVal, potassiumVal, phosphorousVal} = await getNPKValues(farmer.town, farmer.district, farmer.state);
     console.log(farmer.town);
-    const {temperature, humidity} = await getWeatherByLocation1(farmer.town);
-    console.log(temperature, humidity);
+    // const {temperature, humidity} = await getWeatherByLocation1(farmer.town);
+    // console.log(temperature, humidity);
+    const temperature = 27;
+    const humidity = 20;
 
     const requestBody = {
             Temparature: temperature,
@@ -266,7 +260,7 @@ router.post("/farmer/addCrop", async (req, res) => {
           };
       
           try {
-            const response = await axios.post("https://2091-14-195-89-114.ngrok-free.app/recommend-fertilizer", requestBody);
+            const response = await axios.post("https://bdf1-14-195-89-114.ngrok-free.app/recommend-fertilizer", requestBody);
             const json = response.data;
             const farmerCrop = new FarmerCrop({farmerId: farmer._id, cropId: kc._id, cropName: kc.Crop, date: new Date(), fertilizer: json.recommended_fertilizer, fertilizerPeriod: json.fertilise_once_in_days});
             await farmerCrop.save();
