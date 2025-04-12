@@ -100,7 +100,7 @@ def train_model(df: pd.DataFrame):
     print(f"price_predictor: Model trained with R² score: {model.score(X_test, y_test):.2f}")
     
     # Plot the regression metrics
-    plot_regression_metrics(model, X_test, y_test)
+    plot_regression_metrics(X_test, y_test)
 
 
 def save_model():

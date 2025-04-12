@@ -2,9 +2,33 @@ import { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import { useParams } from "react-router-dom";
-import { dummyCrops } from "../data/dummyCrops.js";
+import ChartCard from "../components/ChartCard";
+import BarChartComponent from "../components/BarChartComponent";
+import LineChartComponent from "../components/LineChartComponent";
 
 const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL ?? "http://localhost:5000";
+
+export const irrigationScheduleData = [
+    { day: "Mon", used: 50, recommended: 60 },
+    { day: "Tue", used: 65, recommended: 70 },
+    { day: "Wed", used: 55, recommended: 60 },
+    { day: "Thu", used: 60, recommended: 65 },
+    { day: "Fri", used: 70, recommended: 75 },
+];
+
+export const timeToHarvestData = [
+    { week: "Week 1", progress: 10 },
+    { week: "Week 2", progress: 30 },
+    { week: "Week 3", progress: 55 },
+    { week: "Week 4", progress: 75 },
+    { week: "Week 5", progress: 100 },
+];
+
+export const expectedHarvestData = [
+    { crop: "Wheat", expected: 3000, target: 3500 },
+    { crop: "Rice", expected: 2500, target: 2700 },
+    { crop: "Maize", expected: 2800, target: 3000 },
+];
 
 export default function CropDetails() {
     const { cropId } = useParams();
@@ -119,22 +143,30 @@ export default function CropDetails() {
                     </div> */}
 
                         {/* Irrigation Schedule */}
-                        <div className="bg-white rounded-2xl p-6 shadow">
-                            <h2 className="text-xl font-semibold mb-4">Irrigation Schedule</h2>
-                            <div className="bg-gray-100 h-48 rounded flex items-center justify-center text-gray-500">Chart Placeholder</div>
-                        </div>
-
+                        <ChartCard title="Irrigation Schedule">
+                            <BarChartComponent
+                                data={irrigationScheduleData}
+                                dataKey="used"
+                                xKey="day"
+                                color="#3b82f6"
+                            />
+                        </ChartCard>
                         {/* Time to Harvest */}
-                        <div className="bg-white rounded-2xl p-6 shadow">
-                            <h2 className="text-xl font-semibold mb-4">Time to harvest</h2>
-                            <div className="bg-gray-100 h-48 rounded flex items-center justify-center text-gray-500">Chart Placeholder</div>
-                        </div>
-
+                        <ChartCard title="Time to harvest">
+                            <LineChartComponent
+                                data={timeToHarvestData}
+                                lines={[{ dataKey: "progress", color: "#3b82f6" }]}
+                            />
+                        </ChartCard>
                         {/* Expected Harvest */}
-                        <div className="bg-white rounded-2xl p-6 shadow">
-                            <h2 className="text-xl font-semibold mb-4">Expected harvest</h2>
-                            <div className="bg-gray-100 h-48 rounded flex items-center justify-center text-gray-500">Chart Placeholder</div>
-                        </div>
+                        <ChartCard title="Expected Harvest" height="h-40">
+                            <BarChartComponent
+                                data={expectedHarvestData}
+                                dataKey="expected"
+                                xKey="crop"
+                                color="#3b82f6"
+                            />
+                        </ChartCard>
 
                         {/* Pesticide/Fertilizer Schedule */}
                         <div className="bg-white rounded-2xl p-6 shadow col-span-2 w-3/4">
