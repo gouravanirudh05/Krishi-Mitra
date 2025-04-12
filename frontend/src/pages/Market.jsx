@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import CropCard from "../components/CropCard";
 import ChartCard from "../components/ChartCard";
 import LineChartComponent from "../components/LineChartComponent";
+import UploadCropModal from "../components/UploadCropModal";
 
 export const marketTrendsData = [
     { day: "Mon", yourPrice: 32, marketPrice: 30 },
@@ -35,6 +36,7 @@ const BACKEND_URL =
     import.meta.env.VITE_APP_BACKEND_URL ?? "http://localhost:5000";
 export default function MarketDashboard() {
     const [farmerCrops, setFarmerCrops] = useState([]);
+    const [showUploadModal, setShowUploadModal] = useState(false);
 
     useEffect(() => {
         async function fetchFarmerCrops() {
@@ -82,7 +84,10 @@ export default function MarketDashboard() {
                                     growth={`₹${crop.cropPrice} per kg`}
                                 />
                             ))}
-                            <div className="flex items-center justify-center bg-gray-200 rounded-xl shadow text-4xl font-light cursor-pointer">
+                            <div
+                                className="flex items-center justify-center bg-gray-200 rounded-xl shadow text-4xl font-light cursor-pointer"
+                                onClick={() => setShowUploadModal(true)}
+                            >
                                 +
                             </div>
                         </div>
@@ -117,6 +122,7 @@ export default function MarketDashboard() {
                     </div>
                 </main>
             </div>
+            {showUploadModal && <UploadCropModal onClose={() => setShowUploadModal(false)} />}
         </div>
     );
 }

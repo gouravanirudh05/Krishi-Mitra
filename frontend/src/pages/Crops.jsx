@@ -1,12 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import CropCard from "../components/CropCard";
 import ChartCard from "../components/ChartCard";
+import AddCropModal from "../components/AddCropModal";
 import dummyCrops from "../data/dummyCrops";
 import dummySchedule from "../data/dummySchedule";
 
 export default function Crops() {
+    const [crops, setCrops] = useState(dummyCrops);
+    const [showModal, setShowModal] = useState(false);
+
+    const handleAddCrop = (cropName) => {
+        setCrops((prev) => [
+            ...prev,
+            {
+                id: cropName.toLowerCase().replace(/\s/g, "-"),
+                name: cropName,
+                emoji: "🌾",
+                color: "#fefefe",
+                sales: "0 kg",
+                growth: "+0%",
+            },
+        ]);
+    };
+
     return (
         <div className="flex flex-col sm:flex-row min-h-screen bg-[#f6fbf9] text-gray-800 font-poppins">
             <Sidebar />
@@ -16,66 +34,18 @@ export default function Crops() {
                 <main className="flex-1 p-8 space-y-8">
                     <section>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-                            {dummyCrops.map((crop) => (
+                            {crops.map((crop) => (
                                 <CropCard key={crop.id} {...crop} />
                             ))}
-                            <div className="flex justify-center items-center bg-gray-100 text-4xl rounded-xl shadow cursor-pointer">
+
+                            <div
+                                className="flex justify-center items-center bg-gray-100 text-4xl rounded-xl shadow cursor-pointer hover:bg-gray-200 transition"
+                                onClick={() => setShowModal(true)}
+                            >
                                 +
                             </div>
                         </div>
                     </section>
-
-                    {/* <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <ChartCard
-                            title="Rain shower prediction"
-                            footer={
-                                <>
-                                    <span className="text-purple-600">● Predicted</span>
-                                    <span className="text-blue-500">● Actual</span>
-                                </>
-                            }
-                        >
-                            [Line Chart]
-                        </ChartCard>
-
-                        <ChartCard
-                            title="Irrigation Schedule"
-                            footer={
-                                <>
-                                    <span className="text-blue-500">● Water Used</span>
-                                    <span className="text-green-500">● Recommended</span>
-                                </>
-                            }
-                        >
-                            [Bar Chart]
-                        </ChartCard>
-                    </section>
-
-                    <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <ChartCard
-                            title="Time to harvest"
-                            footer={
-                                <>
-                                    <span className="text-gray-500">Est: 3 weeks</span>
-                                    <span className="text-green-600">Progress: 65%</span>
-                                </>
-                            }
-                        >
-                            [Area Chart]
-                        </ChartCard>
-
-                        <ChartCard
-                            title="Expected harvest"
-                            footer={
-                                <>
-                                    <span className="text-green-600">Expected: 3,200 kg</span>
-                                    <span className="text-yellow-500">Target: 4,000 kg</span>
-                                </>
-                            }
-                        >
-                            [Grouped Bar Chart]
-                        </ChartCard>
-                    </section> */}
 
                     <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div className="bg-white rounded-xl shadow p-4">
@@ -123,6 +93,10 @@ export default function Crops() {
                     </section>
                 </main>
             </div>
+
+            {showModal && (
+                <AddCropModal onClose={() => setShowModal(false)} onAdd={handleAddCrop} />
+            )}
         </div>
     );
 }
