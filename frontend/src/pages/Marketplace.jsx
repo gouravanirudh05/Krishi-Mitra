@@ -3,7 +3,6 @@ import Sidebar from "../components/Sidebar";
 import HeaderCustomer from "../components/HeaderCustomer";
 import CropCardCustomer from "../components/CropCardCustomer";
 import CheckoutButton from "../components/CheckoutButton";
-import CropModal from "../components/CropModal";
 
 const BACKEND_URL =
   import.meta.env.VITE_APP_BACKEND_URL ?? "http://localhost:5000";
@@ -27,6 +26,7 @@ export default function Marketplace() {
           }
         );
         const marketJson = await marketRes.json();
+        console.log(marketJson);
         setCrops(marketJson);
       } catch (err) {
         console.error("Error loading market data", err);
@@ -44,6 +44,7 @@ export default function Marketplace() {
     if (index === -1) {
       existingCart.push({
         id: cropId,
+        farmerId: crop.farmerId,
         cropName: crop.cropName,
         cropPrice: crop.cropPrice,
         cropQuantity: 1,
@@ -104,10 +105,10 @@ export default function Marketplace() {
               <CropCardCustomer
                 key={crop._id}
                 id={crop._id}
-                cropName={crop.name}
-                cropPrice={crop.price}
-                cropQuantity={crop.availableQuantity}
-                farmerId={crop.farmer}
+                cropName={crop.cropName}
+                cropPrice={crop.cropPrice}
+                cropQuantity={crop.cropQuantity}
+                farmerId={crop.farmerId}
                 onIncrement={() => addToCart(crop._id)}
                 onDecrement={() => removeFromCart(crop._id)}
               />
@@ -117,8 +118,6 @@ export default function Marketplace() {
         </main>
 
         <CheckoutButton />
-        <CropModal crop={selectedCrop} onClose={() => setSelectedCrop(null)} />
-
         {showToast && (
           <div className="fixed bottom-5 right-5 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50">
             Crop added to cart!
