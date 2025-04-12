@@ -1,4 +1,4 @@
-import logo from "../assets/logo.png";
+import logo from "../assets/white-logo.png";
 import learnbg from "../assets/learnbg.jpeg"
 import middlemen from "../assets/middlemen.png"
 import icon from "../assets/image.png"
@@ -7,56 +7,60 @@ export default function Learn() {
   return (
     <div className="min-h-screen overflow-auto">
 
-      {/* Navigation */}
-      <nav className="bg-transparent absolute top-0 left-0 right-0 z-10 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center">
-            <img src={logo} alt="KrishiMitra Logo" className="h-10" />
-            <span className="text-white font-bold text-xl ml-2">KrishiMitra</span>
-          </div>
-          <div className="hidden md:flex items-center space-x-6">
-            <Link to="/" className="text-white hover:text-green-300">
-              Home
-            </Link>
-            <Link to="/learn" className="text-white hover:text-green-300">
-              Learn
-            </Link>
-            <Link to="/signup">
-              <button className="text-white px-6 py-3 rounded-md" style={{ backgroundColor: "#24A565" }}>
-                Get Started
-              </button>
-            </Link>
-          </div>
-          <button className="md:hidden text-white">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-        </div>
-      </nav>
-
-
       {/* Hero Section */}
-      <section className="relative h-screen">
-        <div className="absolute inset-0 bg-black opacity-30 z-0"></div>
-        <img
-          src={learnbg}
-          alt="Farm field"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white z-10 px-4">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 max-w-3xl">Boosts the farmers better than ever</h1>
+      <section className="relative h-screen overflow-hidden">
+        {/* Background image and overlay */}
+        <div className="absolute inset-0 -z-10">
+          <img
+            src={learnbg}
+            alt="Farm field"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black opacity-30"></div>
+        </div>
+
+        {/* Navbar */}
+        <nav className="absolute top-0 left-0 right-0 z-20 px-6 py-4">
+          <div className="max-w-7xl mx-auto flex justify-between items-center">
+            <div className="flex items-center">
+              <img src={logo} alt="KrishiMitra Logo" className="h-10" />
+              <span className="text-white font-bold text-3xl ml-2">KrishiMitra</span>
+            </div>
+            <div className="hidden md:flex items-center space-x-6">
+              <Link to="/" className="text-white hover:text-green-300">
+                Home
+              </Link>
+              <Link to="/learn" className="text-white hover:text-green-300">
+                Learn
+              </Link>
+              <Link to="/signup">
+                <button className="text-white px-6 py-3 rounded-md" style={{ backgroundColor: "#24A565" }}>
+                  Get Started
+                </button>
+              </Link>
+            </div>
+
+            <button className="md:hidden text-white">
+              {/* hamburger */}
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
+        </nav>
+
+        {/* Hero Text */}
+        <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white z-10 px-4 select-none">
+          <h1 className="text-5xl md:text-6xl font-bold mb-4 max-w-3xl">
+            Boosts the farmers better than ever
+          </h1>
           <p className="text-xl max-w-2xl">
             Eliminates middlemen and farmers are getting their due on their time, food, and crops.
           </p>
         </div>
+
       </section>
+
 
       {/* Middle Man Section */}
       <section className="relative h-screen">
@@ -160,10 +164,6 @@ export default function Learn() {
                   based on many factors and offers insight on when, where, what to plant, and how to handle it for best
                   outcomes.
                 </p>
-                <div className="mt-4 bg-pink-100 p-2 rounded">
-                  <h4 className="text-sm font-semibold uppercase">Video Explanation</h4>
-                  <p className="text-xs text-gray-600">Get a visual</p>
-                </div>
               </div>
             </div>
 
@@ -198,7 +198,7 @@ export default function Learn() {
               placeholder="Your Phone number"
               className="flex-grow px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-            <button className="text-white px-6 py-2 rounded-r-md hover:opacity-90" style={{ backgroundColor: "#24A565" }}>Sign Up</button>
+            <Link to="/signup"><button className="text-white px-6 py-2 rounded-r-md hover:opacity-90" style={{ backgroundColor: "#24A565" }}>Sign Up</button></Link>
 
           </div>
           <p className="text-xs text-gray-500 mt-2">or simply call service</p>
