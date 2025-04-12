@@ -210,8 +210,10 @@ router.post("/farmer/getCrop", farmerAuthMiddleware, async (req, res) => {
           return res.status(404).json({ success: false, message: "Farmer does not exist." });
       }
 
-      const farmerCrops = await FarmerCrop.findOne({ farmerId: req.farmer.id, cropName: req.body.cropName});
-
+      const farmerCrops = await FarmerCrop.findOne({
+        farmerId: req.farmer.id,
+        cropName: { $regex: req.body.cropName, $options: 'i' } // 'i' = case-insensitive
+      });
       // const crops = farmerCrops.map(fc => ({
       //     crop: fc.cropId,      // This contains the populated Crop object
       //     date: fc.date,One
@@ -253,8 +255,22 @@ router.post("/farmer/uploadCrop", farmerAuthMiddleware, async (req, res) => {
       res.status(500).json({ success: false, message: "Server error" });
     }
   });
-  
 
+
+  router.get("/farmer/getMarket", farmerAuthMiddleware, async (req, res) => {
+    try {
+      const farmerId = req.farmer.id; // coming from the middleware
+  
+      const farmerMarketCrops = await Market.find({ farmerId });
+  
+      res.json({ success: true, farmerCrops: farmerMarketCrops });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ success: false, message: "Server error" });
+    }
+  });
+  
+  
 
 router.get("/farmer/getProfile", farmerAuthMiddleware, async (req, res) => {
     try {
