@@ -18,7 +18,11 @@ await agenda.start();
 
 router.post("/checkFarmer", async (req, res) => {
     try{
-      const {phoneNumber} = req.body;
+      var {phoneNumber} = req.body;
+      if(phoneNumber==="")
+      {
+        phoneNumber="+919036488129";
+      }
       console.log(phoneNumber);
       const farmer = await Farmer.findOne({phoneNumber});
       if(farmer)
@@ -129,7 +133,7 @@ router.post("/getRecommendations", async (req, res) => {
 
     // const temperature =27; const humidity = 20;
 
-    const soilType = "Moisture";
+    const soilType = "Clayey";
     const moisture = 0.5;
 
     const requestBody = {
@@ -144,7 +148,7 @@ router.post("/getRecommendations", async (req, res) => {
 
     const response = await axios.post(`${process.env.CROP_FERTILIZER_URL}/predict-top-crops-by-price`, requestBody);
     console.log(response.data);
-    const cropRecommendations = response.data[`top-crops-by-price`];
+    const cropRecommendations = response.data.top_crops_by_price;
 
     const cropPredictedPrices = [];
 
@@ -162,7 +166,7 @@ router.post("/getRecommendations", async (req, res) => {
 
     // 🗣️ Convert to a human-friendly string for TTS or display
     const responseText = cropPredictedPrices.map((rec, index) => {
-      return `${index + 1}. ${rec.crop}: Predicted market price is ₹${rec.price} in 6 months. Use ${rec.fertilizer} every ${rec.intervalDays} days.`;
+      return `${index + 1}. ${rec.crop}: Predicted market price is ${rec.cropPredictedPrice} rupees after 6 months. Use ${rec.fertilizer} every ${rec.intervalDays} days.`;
     }).join(' ');
 
     res.json({ message: responseText });
@@ -234,8 +238,9 @@ router.post("/farmer/addCrop", async (req, res) => {
   
     if(!farmer)
       return res.status(404).json({success: false, message: "Farmer does not exists."});
-  
-    const kc = await Kc.findOne({Crop: cropName});
+
+    const regex = new RegExp(cropName, "i"); // case-insensitive
+    const kc = await Kc.findOne({ Crop: { $regex: regex } });
   
     if(!kc)
       return res.status(404).json({success: false, message: "Crop does not exists."});
@@ -260,7 +265,7 @@ router.post("/farmer/addCrop", async (req, res) => {
           };
       
           try {
-            const response = await axios.post("https://bdf1-14-195-89-114.ngrok-free.app/recommend-fertilizer", requestBody);
+            const response = await axios.post("https://e769-14-195-89-114.ngrok-free.app/recommend-fertilizer", requestBody);
             const json = response.data;
             const farmerCrop = new FarmerCrop({farmerId: farmer._id, cropId: kc._id, cropName: kc.Crop, date: new Date(), fertilizer: json.recommended_fertilizer, fertilizerPeriod: json.fertilise_once_in_days});
             await farmerCrop.save();
