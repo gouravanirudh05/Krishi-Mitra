@@ -112,7 +112,9 @@ export default function Dashboard() {
 
 
   return (
-    <div className="flex min-h-screen bg-[#f6fbf9] text-gray-800 font-poppins">
+      <div className="flex flex-col sm:flex-row min-h-screen bg-[#f6fbf9] text-gray-800 font-poppins">
+
+
       <Sidebar activePage="Dashboard" />
 
       <div className="flex-1 flex flex-col">
@@ -120,20 +122,25 @@ export default function Dashboard() {
 
         <main className="flex-1 p-8 space-y-8">
           {/* Crop Cards */}
-          <section className="w-3/4 mx-auto">
-            <div className="bg-white rounded-2xl shadow p-6">
-              <h2 className="text-xl font-semibold text-center mb-6">Farmer Information</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <DisplayField label="Name" value={farmerInfo.name} />
-                <DisplayField label="Phone Number" value={farmerInfo.phoneNumber} />
-                <DisplayField label="District" value={farmerInfo.district} />
-                <DisplayField label="Town" value={farmerInfo.town} />
-                <DisplayField label="Block" value={farmerInfo.block} />
-                <DisplayField label="State" value={farmerInfo.state} />
-                <DisplayField label="Land Area (acres)" value={farmerInfo.landArea} />
-              </div>
-            </div>
-          </section>
+          
+            {/* <div className="bg-white rounded-2xl shadow p-6"> */}
+              {/* <h2 className="text-xl font-semibold text-center mb-6">Farmer Information</h2> */}
+              <section className="w-full max-w-4xl mx-auto">
+                <div className="bg-white rounded-2xl shadow-lg p-8">
+                  <h2 className="text-2xl font-bold text-green-700 mb-6 text-center">👨‍🌾 Farmer Profile</h2>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <InfoItem label="Name" value={farmerInfo.name} icon="👤" />
+                    <InfoItem label="Phone Number" value={farmerInfo.phoneNumber} icon="📞" />
+                    <InfoItem label="District" value={farmerInfo.district} icon="🗺️" />
+                    <InfoItem label="Town" value={farmerInfo.town} icon="🏘️" />
+                    <InfoItem label="State" value={farmerInfo.state} icon="🗂️" />
+                    <InfoItem label="Land Area (Acres)" value={farmerInfo.landArea} icon="🌾" />
+                  </div>
+                </div>
+              </section>
+            
+
 
           <p className="text-xl font-semibold text-gray-800 mb-2">Your Crops</p>
           <section className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
@@ -151,7 +158,7 @@ export default function Dashboard() {
                 name={crop.cropName}
                 color="#ffffff"
                 text1={`${crop.fertilizer} fertilizer used`}
-                text2={`crop sown on ${crop.date.toDateString()}`}
+                text2={`crop sown on ${crop.date.toString().slice(0,10)}`}
               />
             ))}
           </section>
@@ -160,12 +167,22 @@ export default function Dashboard() {
           {/* Farming Tips */}
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="bg-white rounded-xl shadow p-4">
-              <h4 className="font-semibold mb-2">Farming Tips</h4>
-              <div className="h-40 overflow-y-auto text-sm text-gray-700 whitespace-pre-line px-1">
-                {farmerInfo.farmingTips || "No tips available."}
+              <h4 className="font-semibold mb-2 text-lg">🌱 Farming Tips</h4>
+              <div className="h-40 overflow-y-auto text-sm text-gray-700 px-1 space-y-3">
+                {(farmerInfo.farmingTips || "No tips available.")
+                  .split("\n")
+                  .filter((line) => line.trim() !== "")
+                  .map((line, index) => (
+                    <div key={index} className="flex items-start gap-2">
+                      <span className="text-green-500 mt-1">➤</span>
+                      <span className="leading-relaxed">{line}</span>
+                    </div>
+                  ))}
               </div>
             </div>
           </section>
+
+            
 
           {/* Charts */}
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">

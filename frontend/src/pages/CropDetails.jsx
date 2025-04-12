@@ -71,7 +71,7 @@ export default function CropDetails() {
     if (!crop) return <p className="p-8">Loading...</p>;
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
+        <div className="flex flex-col sm:flex-row min-h-screen bg-[#f6fbf9] text-gray-800 font-poppins">
             <Sidebar />
             <div className="flex flex-col flex-1">
                 <Header />

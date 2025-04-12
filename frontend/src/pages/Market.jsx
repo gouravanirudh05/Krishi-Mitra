@@ -32,7 +32,7 @@ export default function MarketDashboard() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-gray-50 flex">
+        <div className="flex flex-col sm:flex-row min-h-screen bg-[#f6fbf9] text-gray-800 font-poppins">
             <Sidebar />
 
             <div className="flex flex-col flex-1">
