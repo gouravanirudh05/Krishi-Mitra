@@ -3,6 +3,7 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import CropCard from "../components/CropCard";
 import DisplayField from "../components/DisplayField";
+import InfoItem from "../components/InfoItem";
 import ChartCard from "../components/ChartCard";
 import LineChartComponent from "../components/LineChartComponent";
 import BarChartComponent from "../components/BarChartComponent";
