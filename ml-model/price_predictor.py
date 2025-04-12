@@ -2,6 +2,8 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import numpy as np
 import os
 import joblib
@@ -12,6 +14,38 @@ le = None
 # UPDATED CSV PATH
 dataset_path = "datasets/prices.csv"
 mapping_file = "models/price_predictor_model_mapping.csv"
+image_path = "models/metrics/"
+
+def plot_regression_metrics(X_test, y_test):
+
+    global model
+    if model is None:
+        raise Exception("price_predictor: Model must be trained before plotting metrics.")
+    
+
+    y_pred = model.predict(X_test)
+    
+    mae = mean_absolute_error(y_test, y_pred)
+    mse = mean_squared_error(y_test, y_pred)
+    rmse = np.sqrt(mse)
+    r2 = r2_score(y_test, y_pred)
+
+    metrics = [mae, mse, rmse, r2]
+    labels = ["MAE", "MSE", "RMSE", "R²"]
+
+    plt.figure(figsize=(8, 6))
+    bars = plt.bar(labels, metrics, color=['#f94144', '#f3722c', '#f9c74f', '#43aa8b'])
+    for bar in bars:
+        yval = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width()/2, yval + 0.01, f'{yval:.2f}', ha='center', va='bottom')
+    
+    plt.title("Regression Metrics for Price Prediction")
+    plt.ylabel("Score")
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.tight_layout()
+    if (not os.path.exists(image_path)):
+        os.makedirs(image_path)
+    plt.savefig(os.path.join(image_path, "regression_metrics.png"))
 
 def load_data():
     global model, le, mapping_file
@@ -50,6 +84,11 @@ def pre_processing() -> pd.DataFrame:
 
 def train_model(df: pd.DataFrame):
     global model, le
+    if model is not None:
+        raise Exception("price_predictor: Model already trained. Please save or reset before retraining.")
+    if le is not None:
+        raise Exception("price_predictor: LabelEncoder already trained. Please save or reset before retraining.")
+
     print("price_predictor: Training model...")
     le = LabelEncoder()
     df["item_encoded"] = le.fit_transform(df["Item Name"])
@@ -58,7 +97,11 @@ def train_model(df: pd.DataFrame):
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
     model = RandomForestRegressor()
     model.fit(X_train, y_train)
-    print(f"price_predictor: Model trained with accuracy: {model.score(X_test, y_test):.2f}")
+    print(f"price_predictor: Model trained with R² score: {model.score(X_test, y_test):.2f}")
+    
+    # Plot the regression metrics
+    plot_regression_metrics(model, X_test, y_test)
+
 
 def save_model():
     global model, le, mapping_file
