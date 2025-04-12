@@ -3,7 +3,6 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import CropCard from "../components/CropCard";
 import ChartCard from "../components/ChartCard";
-import { LineChart } from "recharts";
 import LineChartComponent from "../components/LineChartComponent";
 
 export const marketTrendsData = [
