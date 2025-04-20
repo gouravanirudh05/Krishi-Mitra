@@ -5,8 +5,8 @@
 
   <p align="center">
     Just a great tool to empower farmers
-      [Demo Video](https://youtu.be/2H9zSSVvHvc)
     <br />
+    <a href="https://youtu.be/2H9zSSVvHvc" target="_blank">Demo Video</a>
     <br />
     <strong>GG_Coders</strong>
     <br />
